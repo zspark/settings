@@ -1,0 +1,74 @@
+set nocompatible
+let $LANG='en'
+set lm=en
+source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/mswin.vim
+behave mswin
+
+set number
+set encoding=utf-8
+set go=
+set columns=120
+set lines=35
+set guifont=consolas:h11
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+set autoindent
+
+syntax enable
+let g:solarized_menu=0
+colorscheme evening
+
+"map <C-w> :tab close<CR>
+"map <C-n> :tab new<CR>
+
+set diffexpr=MyDiff()
+function MyDiff()
+  let opt = '-a --binary '
+  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let eq = ''
+  if $VIMRUNTIME =~ ' '
+    if &sh =~ '\<cmd'
+      let cmd = '""' . $VIMRUNTIME . '\diff"'
+      let eq = '"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+endfunction
+
+"这里是NERDTree的必要配置
+map <F2> :silent! NERDTreeToggle<CR>
+let NERDTreeWinPos="right"   "将窗口显示在右边
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeDirArrowExpandable = '▾'
+let g:NERDTreeDirArrowCollapsible = '▾'
+let g:NERDTreeDirArrowCollapsible = '▾'
+
+
+"这里是gvimfullscreen的配置：
+if has('gui_running') && has("win32")
+    map <F11> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+endif
+
+
+"这里是vimtweak的配置
+au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 224)
+
+"as3字典文件；
+"au FileType actionscript call AddAS3Dic()
+"function AddAS3Dic()
+"	set dictionary-=$VIM/vimfiles/dic/as3_dic.txt dictinary+=$VIM/vimfiles/dic/ad3_dic.txt
+"	set complete-=k complete+=k
+"endfunction
