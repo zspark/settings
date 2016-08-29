@@ -1,5 +1,6 @@
 set nocompatible
 set noswapfile
+set nobackup
 let $LANG='en'
 set lm=en
 source $VIMRUNTIME/vimrc_example.vim
