@@ -7,21 +7,26 @@ source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
 behave mswin
 
-set number
 set encoding=utf-8
-set go=
 set columns=120
 set lines=35
-set guifont=consolas:h11
-set tabstop=2
+set go=
+"set guifont=consolas:h11
+set guifont=DejaVu_Sans_Mono_for_Powerline:h11:cANSI
+
+"显示布局
+set laststatus=2
+set number
+"set numberwidth=5
 set softtabstop=2
 set shiftwidth=2
 set autoindent
 
 syntax enable
 let g:solarized_menu=0
-colorscheme evening
+colorscheme solarized
 
+"自定义按键
 "map <C-w> :tab close<CR>
 "map <C-n> :tab new<CR>
 
@@ -74,3 +79,33 @@ au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 224)
 "	set dictionary-=$VIM/vimfiles/dic/as3_dic.txt dictinary+=$VIM/vimfiles/dic/ad3_dic.txt
 "	set complete-=k complete+=k
 "endfunction
+
+
+"这里是vim-powerline的配置；（目前用vim-airline代替powerline）
+"let g:Powerline_symbols = 'fancy'
+"set t_Co=256
+"set fillchars+=stl:\ ,stlnc:\
+"let g:Powerline_mode_V="V·LINE"
+"let g:Powerline_mode_cv="V·BLOCK"
+"let g:Powerline_mode_S="S·LINE"
+"let g:Powerline_mode_cs="S·BLOCK"
+
+"这里是vim-airline的配置
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_powerline_fonts = 1
+" unicode symbols
+"♣☺☻
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
