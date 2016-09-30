@@ -10,7 +10,7 @@ behave mswin
 set encoding=utf-8
 set columns=120
 set lines=35
-set go=
+"set go=
 "set guifont=consolas:h11
 set guifont=DejaVu_Sans_Mono_for_Powerline:h11:cANSI
 
@@ -26,7 +26,9 @@ syntax enable
 let g:solarized_menu=0
 colorscheme solarized
 
-"自定义按键
+"
+"自定义按键（与插件无关）
+"
 "map <C-w> :tab close<CR>
 "map <C-n> :tab new<CR>
 
@@ -55,7 +57,9 @@ function MyDiff()
   silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 endfunction
 
+"
 "这里是NERDTree的必要配置
+"
 map <F2> :silent! NERDTreeToggle<CR>
 let NERDTreeWinPos="right"   "将窗口显示在右边
 let g:NERDTreeDirArrows = 1
@@ -63,17 +67,21 @@ let g:NERDTreeDirArrowExpandable = '▾'
 let g:NERDTreeDirArrowCollapsible = '▾'
 let g:NERDTreeDirArrowCollapsible = '▾'
 
-
+"
 "这里是gvimfullscreen的配置：
+"
 if has('gui_running') && has("win32")
     map <F11> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 endif
 
-
+"
 "这里是vimtweak的配置
+"
 au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 224)
 
+"
 "as3字典文件；
+"
 "au FileType actionscript call AddAS3Dic()
 "function AddAS3Dic()
 "	set dictionary-=$VIM/vimfiles/dic/as3_dic.txt dictinary+=$VIM/vimfiles/dic/ad3_dic.txt
@@ -90,22 +98,31 @@ au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 224)
 "let g:Powerline_mode_S="S·LINE"
 "let g:Powerline_mode_cs="S·BLOCK"
 
+"
 "这里是vim-airline的配置
+"
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
 let g:airline_powerline_fonts = 1
-" unicode symbols
-"♣☺☻
 let g:airline_left_sep = '»'
 let g:airline_left_sep = '▶'
 let g:airline_right_sep = '«'
 let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '♣'
+let g:airline_symbols.linenr = '☺'
 let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.branch = '☻'
 let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.paste = 'Þ'
 let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
+
+"
+"taglist配置
+"
+let Tlist_Show_One_File=1    "只显示当前文件的tags
+let Tlist_WinWidth=40        "设置taglist宽度
+let Tlist_Exit_OnlyWindow=1  "tagList窗口是最后一个窗口，则退出Vim
+let Tlist_Use_Right_Window=0 "在Vim窗口右侧显示taglist窗口
+map <F8> :silent! TlistToggle<CR>
