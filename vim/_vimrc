@@ -10,7 +10,7 @@ behave mswin
 set encoding=utf-8
 set columns=120
 set lines=35
-"set go=
+set go=
 "set guifont=consolas:h11
 set guifont=DejaVu_Sans_Mono_for_Powerline:h11:cANSI
 
