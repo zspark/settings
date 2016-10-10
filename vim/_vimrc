@@ -13,6 +13,7 @@ set lines=35
 set go=
 "set guifont=consolas:h11
 set guifont=DejaVu_Sans_Mono_for_Powerline:h10:cANSI
+set cursorline
 
 "显示布局
 set laststatus=2
