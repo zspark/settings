@@ -1,0 +1,6 @@
+clamp
+dot
+normalize
+cross
+min
+max

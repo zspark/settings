@@ -14,6 +14,7 @@ set go=
 "set guifont=consolas:h11
 set guifont=DejaVu_Sans_Mono_for_Powerline:h10:cANSI
 set cursorline
+"set cursorcolumn
 
 "显示布局
 set laststatus=2
@@ -26,6 +27,10 @@ set autoindent
 syntax enable
 let g:solarized_menu=0
 colorscheme solarized
+
+"设置字典查询快捷键
+"set complete-=k complete+=k
+"
 
 "
 "自定义按键（与插件无关）
@@ -90,7 +95,9 @@ au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 240)
 "endfunction
 
 
+"
 "这里是vim-powerline的配置；（目前用vim-airline代替powerline）
+"
 "let g:Powerline_symbols = 'fancy'
 "set t_Co=256
 "set fillchars+=stl:\ ,stlnc:\
