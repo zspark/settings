@@ -27,6 +27,7 @@ set autoindent
 syntax enable
 let g:solarized_menu=0
 colorscheme solarized
+set linebreak"英文单词在换行时不被截断
 
 "设置字典查询快捷键
 "set complete-=k complete+=k
@@ -64,6 +65,18 @@ function MyDiff()
 endfunction
 
 "
+"这是对tablable的优化，让标签页的名字显示短点。
+"初步检查在guioptions设置为null后，下面没有效果
+"
+function ShortTabLabel()
+  let bufnrlist = tabpagebuflist(v:lnum)
+  let label = bufname(bufnrlist[tabpagewinnr(v:lnum) -1])
+  let filename = fnamemodify(label, ':t')
+  return filename
+endfunction
+set guitablabel=%{ShortTabLabel()}
+
+"
 "这里是NERDTree的必要配置
 "
 map <F2> :silent! NERDTreeToggle<CR>
@@ -85,9 +98,14 @@ endif
 "
 au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 240)
 
+"增加对文件类型的判断
+au BufNewFile,BufRead,BufEnter,WinEnter,FileType *.cu setf cuda
+
+
 "
-"as3字典文件；
+"字典文件；
 "
+au FileType cuda setlocal dict+=$vim/vimfiles/dic/optix.txt
 "au FileType actionscript call AddAS3Dic()
 "function AddAS3Dic()
 "	set dictionary-=$VIM/vimfiles/dic/as3_dic.txt dictinary+=$VIM/vimfiles/dic/ad3_dic.txt
@@ -138,3 +156,23 @@ let Tlist_WinWidth=40        "设置taglist宽度
 let Tlist_Exit_OnlyWindow=1  "tagList窗口是最后一个窗口，则退出Vim
 let Tlist_Use_Right_Window=0 "在Vim窗口右侧显示taglist窗口
 map <F8> :silent! TlistToggle<CR>
+
+"
+"这里是对sessionman的设置
+"sessionman与我的air-line不太兼容，暂时使用vim-session插件，见下
+"
+":SessionOpen command takes a session name as an argument.  It supports argument completion. 
+":SessionOpenLast command opens the g:LAST_SESSION session (see above). 
+":SessionClose command wipes out all buffers, kills cscope and clears variables with session name. 
+":SessionSave command saves the current editing session.  If v:this_session is empty it asks for a session name. 
+":SessionSaveAs command takes a session name as an optional argument.  If there is no argument or it is empty, it asks for a session name (default is the last part of v:this_session). 
+":SessionList command shows all sessions saved.
+
+"
+"vim-session
+"
+:let g:session_autosave='yes'
+:let g:session_autoload='no'
+" Don't save hidden and unloaded buffers in sessions.
+set sessionoptions-=buffers
+
