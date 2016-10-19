@@ -66,11 +66,17 @@ syn keyword optixFn	rtPotentialIntersection
 syn keyword optixFn	rtReportIntersection
 syn keyword optixFn	rtTrace rtPrintf
 syn keyword optixFn	rtPrintExceptionDetails
+syn keyword optixFn	rtTransformNormal
 syn keyword optixFn	make_float make_float2 make_float3 make_float4
+syn keyword optixFn	make_int2 make_int3 make_int4 make_uint2 make_uint3 make_uint4
 syn keyword optixFn	tex1D tex2D tex3D
-syn keyword optixFn	normalize dot corss clamp
+syn keyword optixFn	normalize dot cross clamp length floor reflect refract faceforward expf getByIndex setByIndex
+syn keyword optixFn	smoothstep temperature intersect_triangle_branchless intersect_triangle_earlyexit intersect_triangle
+syn keyword optixFn	fresnel_schlick luminance luminanceCIE cosine_sample_hemisphere square_to_disk cart_to_pol
+syn keyword optixFn	sqrt sin cos tan asin acos atan atan2 min max
 " macro
-syn keyword optixMacro	M_1_PIf M_PIf
+syn keyword optixMacro	M_1_PIf M_PIf M_PI_2f M_PI_4f M_2_PIf M_Ef M_LOG10Ef M_LN2f M_LN10f M_2_SQRTPIf M_SQRT1_2f
+syn keyword optixMacro	RT_OBJECT_TO_WORLD RT_WORLD_TO_OBJECT
 " Optix variable.
 syn keyword optixVar	Ray namespace
 syn keyword optixVar	size_t2 rtObject rtBuffer rtTextureSampler
