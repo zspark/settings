@@ -176,3 +176,13 @@ map <F8> :silent! TlistToggle<CR>
 " Don't save hidden and unloaded buffers in sessions.
 set sessionoptions-=buffers
 
+"
+"bufexplorer settings;
+"
+"If you do not like the default key mappings of <Leader>be, <Leader>bs, and
+"<Leader>bv, you can override bufexplorer's default mappings by setting up
+"something like the following in your vimrc file:
+"map <silent> <F11> :BufExplorer<CR>
+"map <Leader>b :BufExplorerHorizontalSplit<CR>
+"map <F10> :ToggleBufExplorer<CR>
+
