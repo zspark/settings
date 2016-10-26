@@ -76,7 +76,7 @@ syn keyword optixFn	fresnel_schlick luminance luminanceCIE cosine_sample_hemisph
 syn keyword optixFn	sqrt sin cos tan asin acos atan atan2 min max
 " macro
 syn keyword optixMacro	M_1_PIf M_PIf M_PI_2f M_PI_4f M_2_PIf M_Ef M_LOG10Ef M_LN2f M_LN10f M_2_SQRTPIf M_SQRT1_2f
-syn keyword optixMacro	RT_OBJECT_TO_WORLD RT_WORLD_TO_OBJECT
+syn keyword optixMacro	RT_OBJECT_TO_WORLD RT_WORLD_TO_OBJECT RT_DEFAULT_MAX
 " Optix variable.
 syn keyword optixVar	Ray namespace
 syn keyword optixVar	size_t2 rtObject rtBuffer rtTextureSampler
@@ -87,6 +87,8 @@ syn keyword states	rtLaunchIndex
 syn keyword states	rtIntersectionDistance
 syn keyword states	using optix
 syn keyword states	RT_PROGRAM RT_CALLALBE_PROGRAM
+" debug fn(user def.)
+syn keyword debug	DbgPrintFloat2 DbgPrintFloat3 DbgPrintFloat4
 " others
 syn keyword others	attribute
 
@@ -99,6 +101,7 @@ hi def link optixFn	Function
 hi def link optixVar	Type
 hi def link states	Statement
 hi def link optixMacro	Macro
+hi def link debug	ErrorMsg
 hi def link others	pandocDefinitionBlock
 
 let b:current_syntax = "cuda"

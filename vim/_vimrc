@@ -29,6 +29,8 @@ let g:solarized_menu=0
 colorscheme solarized
 set linebreak"英文单词在换行时不被截断
 
+set foldmethod=marker
+
 "设置字典查询快捷键
 "set complete-=k complete+=k
 "
