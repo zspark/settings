@@ -88,7 +88,7 @@ syn keyword states	rtIntersectionDistance
 syn keyword states	using optix
 syn keyword states	RT_PROGRAM RT_CALLALBE_PROGRAM
 " debug fn(user def.)
-syn keyword debug	DbgPrintFloat2 DbgPrintFloat3 DbgPrintFloat4
+syn keyword debug	DbgPrintFloat2 DbgPrintFloat3 DbgPrintFloat4 TODO todo info INFO Todo Info
 " others
 syn keyword others	attribute
 
