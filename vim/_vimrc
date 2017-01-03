@@ -20,6 +20,7 @@ set cursorcolumn
 set laststatus=2
 set number
 "set numberwidth=5
+set relativenumber
 set softtabstop=2
 set shiftwidth=2
 set autoindent
