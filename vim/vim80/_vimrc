@@ -1,11 +1,16 @@
 set nocompatible
-set noswapfile
-set nobackup
 let $LANG='en'
 set lm=en
+
 source $VIMRUNTIME/vimrc_example.vim
 source $VIMRUNTIME/mswin.vim
 behave mswin
+
+
+set noundofile
+set nowritebackup
+set noswapfile
+set nobackup
 
 set encoding=utf-8
 set columns=120
