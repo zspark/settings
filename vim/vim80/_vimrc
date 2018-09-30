@@ -30,6 +30,7 @@ set relativenumber
 set softtabstop=2
 set shiftwidth=2
 set autoindent
+set shell=c:/msys64/usr/bin/bash.exe/ -f
 
 syntax enable
 let g:solarized_menu=0
