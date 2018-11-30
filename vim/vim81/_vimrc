@@ -29,6 +29,9 @@ set autoindent
 set backupdir=D:\vimtmp\backup
 set directory=D:\vimtmp
 
+"set shell=D:\bash\
+"set shell=C:/Program\ Files/Git/bin/bash.exe/
+
 
 set diffexpr=MyDiff()
 function MyDiff()
@@ -64,3 +67,9 @@ function MyDiff()
   endif
 endfunction
 
+map <F2> :silent! NERDTreeToggle<CR>
+let NERDTreeWinPos="left"   "将窗口显示在右边
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeDirArrowExpandable = '▾'
+let g:NERDTreeDirArrowCollapsible = '▾'
+let g:NERDTreeDirArrowCollapsible = '▾'
