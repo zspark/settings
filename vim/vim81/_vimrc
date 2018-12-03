@@ -30,7 +30,7 @@ set backupdir=D:\vimtmp\backup
 set directory=D:\vimtmp
 
 "set shell=D:\bash\
-"set shell=C:/Program\ Files/Git/bin/bash.exe/
+"set shell=\"C:\Program\ Files\Git\bin\bash.exe\"\
 
 
 set diffexpr=MyDiff()
@@ -73,3 +73,10 @@ let g:NERDTreeDirArrows = 1
 let g:NERDTreeDirArrowExpandable = '▾'
 let g:NERDTreeDirArrowCollapsible = '▾'
 let g:NERDTreeDirArrowCollapsible = '▾'
+
+
+if has('gui_running') && has("win32")
+    map <F11> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+endif
+
+au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 240)
