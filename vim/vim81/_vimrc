@@ -26,8 +26,9 @@ set shiftwidth=2
 set softtabstop=2
 set autoindent
 
-set backupdir=D:\vimtmp\backup
-set directory=D:\vimtmp
+set undodir=C:\.vim\undo
+set backupdir=C:\.vim\backup
+set directory=C:\.vim
 
 "set shell=D:\bash\
 "set shell=\"C:\Program\ Files\Git\bin\bash.exe\"\
