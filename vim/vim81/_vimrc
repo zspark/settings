@@ -10,6 +10,7 @@ set lines=35
 set go=
 set go+=m
 set cursorline
+set cursorcolumn
 syn on
 
 colorscheme evening
