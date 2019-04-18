@@ -23,13 +23,20 @@ set history=200
 set laststatus=2
 set number
 set relativenumber
-set shiftwidth=2
-set softtabstop=2
+set shiftwidth=4
+set softtabstop=4
 set autoindent
 
 set undodir=C:\.vim\undo
 set backupdir=C:\.vim\backup
 set directory=C:\.vim
+
+set hlsearch
+set ignorecase
+set smartcase
+set incsearch
+
+set guifont=DejaVu_Sans_Mono:h9
 
 "set shell=D:\bash\
 "set shell=\"C:\Program\ Files\Git\bin\bash.exe\"\
@@ -82,3 +89,21 @@ if has('gui_running') && has("win32")
 endif
 
 au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 240)
+
+"js-vim-plugin-config
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 1
+let g:javascript_plugin_flow = 1
+let g:javascript_conceal_function             = "ƒ"
+let g:javascript_conceal_null                 = "ø"
+let g:javascript_conceal_this                 = "@"
+let g:javascript_conceal_return               = "⇚"
+let g:javascript_conceal_undefined            = "¿"
+let g:javascript_conceal_NaN                  = "ℕ"
+let g:javascript_conceal_prototype            = "¶"
+let g:javascript_conceal_static               = "•"
+let g:javascript_conceal_super                = "Ω"
+let g:javascript_conceal_arrow_function       = "⇒"
+let g:javascript_conceal_noarg_arrow_function = "🞅"
+let g:javascript_conceal_underscore_arrow_function = "🞅"
+"set conceallevel = 1
