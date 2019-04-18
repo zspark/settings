@@ -23,9 +23,11 @@ set history=200
 set laststatus=2
 set number
 set relativenumber
-set shiftwidth=4
-set softtabstop=4
+set shiftwidth=2
+set softtabstop=2
 set autoindent
+set ts=2
+set expandtab
 
 set undodir=C:\.vim\undo
 set backupdir=C:\.vim\backup
