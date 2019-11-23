@@ -29,9 +29,9 @@ set autoindent
 set ts=2
 set expandtab
 
-set undodir=~/.vim_swap/undo
-set backupdir=~/.vim_swap/backup
-set directory=~/.vim_swap/
+set undodir=~/.vim/.vim_swap/undo
+set backupdir=~/.vim/.vim_swap/backup
+set directory=~/.vim/.vim_swap/
 
 set hlsearch
 set smartcase
@@ -42,7 +42,7 @@ set incsearch
 "set shell=D:\bash\
 "set shell=\"C:\Program\ Files\Git\bin\bash.exe\"\
 
-call plug#begin()
+call plug#begin('~/.vim/.vim_plug')
 Plug 'scrooloose/nerdtree'
 "Plug 'scrooloose/syntastic'
 Plug 'vim-airline/vim-airline'
