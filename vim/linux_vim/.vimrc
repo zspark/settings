@@ -4,8 +4,8 @@ let $LANG='en'
 set lm=en
 
 set encoding=utf-8
-set columns=120
-set lines=35
+set columns=220
+set lines=60
 set go=
 set go+=m
 set cursorline
@@ -66,5 +66,8 @@ let g:ctrlp_max_depth=40
 let g:ctrlp_use_caching=1
 let g:ctrlp_working_path_mode = ""
 
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
+if !exists('g:airline_symbols')
+    let g:airline_symbols={}
+endif
 
