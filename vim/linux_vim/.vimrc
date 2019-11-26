@@ -36,6 +36,7 @@ set directory=~/.vim/.vim_swap/
 set hlsearch
 set smartcase
 set incsearch
+colorscheme desert
 
 "set guifont=DejaVu_Sans_Mono:h9
 
@@ -44,12 +45,12 @@ set incsearch
 
 call plug#begin('~/.vim/.vim_plug')
 Plug 'scrooloose/nerdtree'
-"Plug 'scrooloose/syntastic'
 Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'altercation/vim-colors-solarized'
+"Plug 'altercation/vim-colors-solarized'
+"Plug 'scrooloose/syntastic'
+"Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 
@@ -67,10 +68,3 @@ let g:ctrlp_working_path_mode = ""
 
 let g:airline_powerline_fonts = 1
 
-let g:solarized_termcolors=256
-if has('gui_running')
-  set background=light
-else
-  set background=dark
-endif
-colorscheme desert
