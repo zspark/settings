@@ -29,17 +29,16 @@ set autoindent
 set ts=2
 set expandtab
 
-set undodir=C:\.vim\undo
-set backupdir=C:\.vim\backup
-set directory=C:\.vim
+set undodir=~\.vim
+set backupdir=~\.vim
+set directory=~\.vim
 
 set hlsearch
 set ignorecase
 set smartcase
 set incsearch
 
-set guifont=DejaVu_Sans_Mono:h9
-
+"set guifont=DejaVu_Sans_Mono:h9
 "set shell=D:\bash\
 "set shell=\"C:\Program\ Files\Git\bin\bash.exe\"\
 
@@ -78,34 +77,31 @@ function MyDiff()
   endif
 endfunction
 
+call plug#begin('~/.vim/.plug')
+Plug 'scrooloose/nerdtree'
+Plug 'vim-airline/vim-airline'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'octol/vim-cpp-enhanced-highlight'
+"Plug 'altercation/vim-colors-solarized'
+"Plug 'scrooloose/syntastic'
+"Plug 'vim-airline/vim-airline-themes'
+call plug#end()
+
+
 map <F2> :silent! NERDTreeToggle<CR>
-let NERDTreeWinPos="left"   "将窗口显示在右边
+let NERDTreeWinPos="left"   "灏嗙獥鍙ｆ樉绀哄湪鍙宠竟
 let g:NERDTreeDirArrows = 1
-let g:NERDTreeDirArrowExpandable = '▾'
-let g:NERDTreeDirArrowCollapsible = '▾'
-let g:NERDTreeDirArrowCollapsible = '▾'
+let g:NERDTreeDirArrowExpandable = '+'
+let g:NERDTreeDirArrowCollapsible = '-'
+let g:NERDTreeDirArrowCollapsible = '-'
+
+let g:ctrlp_max_files=0
+let g:ctrlp_max_depth=40
+let g:ctrlp_use_caching=1
+let g:ctrlp_working_path_mode = ""
 
 
-if has('gui_running') && has("win32")
-    map <F11> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
+let g:airline_powerline_fonts = 0
+if !exists('g:airline_symbols')
+    let g:airline_symbols={}
 endif
-
-au GUIEnter * call libcallnr("vimtweak.dll", "SetAlpha", 240)
-
-"js-vim-plugin-config
-let g:javascript_plugin_jsdoc = 1
-let g:javascript_plugin_ngdoc = 1
-let g:javascript_plugin_flow = 1
-let g:javascript_conceal_function             = "ƒ"
-let g:javascript_conceal_null                 = "ø"
-let g:javascript_conceal_this                 = "@"
-let g:javascript_conceal_return               = "⇚"
-let g:javascript_conceal_undefined            = "¿"
-let g:javascript_conceal_NaN                  = "ℕ"
-let g:javascript_conceal_prototype            = "¶"
-let g:javascript_conceal_static               = "•"
-let g:javascript_conceal_super                = "Ω"
-let g:javascript_conceal_arrow_function       = "⇒"
-let g:javascript_conceal_noarg_arrow_function = "🞅"
-let g:javascript_conceal_underscore_arrow_function = "🞅"
-"set conceallevel = 1
