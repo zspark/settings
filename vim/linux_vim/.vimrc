@@ -54,11 +54,11 @@ set foldlevel=100               "设置折叠层数
 call plug#begin('~/.vim/.plug')
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'octol/vim-cpp-enhanced-highlight'
 "Plug 'altercation/vim-colors-solarized'
 "Plug 'scrooloose/syntastic'
-"Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 
@@ -79,3 +79,4 @@ let g:airline_powerline_fonts = 0
 if !exists('g:airline_symbols')
     let g:airline_symbols={}
 endif
+let g:airline_theme='light'
