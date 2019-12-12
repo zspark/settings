@@ -4,8 +4,8 @@ let $LANG='en'
 set lm=en
 
 set encoding=utf-8
-set columns=220
-set lines=60
+set columns=180
+set lines=45
 set go=
 set go+=m
 set cursorline
@@ -20,7 +20,7 @@ set wildmenu
 set backspace=indent,eol,start
 set history=20
 
-set laststatus=2
+"set laststatus=2
 set number
 set relativenumber
 set shiftwidth=2
@@ -36,7 +36,7 @@ set directory=~/.vim/.vim_swap/
 set hlsearch
 set smartcase
 set incsearch
-colorscheme desert
+colorscheme default
 
 "set guifont=DejaVu_Sans_Mono:h9
 
