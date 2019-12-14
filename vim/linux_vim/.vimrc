@@ -38,7 +38,7 @@ set directory=~/.vim/.swap/
 set hlsearch
 set smartcase
 set incsearch
-colorscheme default
+"colorscheme default
 
 "++++++++++++++++++++++折叠+++++++++++++++++++++++++
 set foldenable                "开启折叠
