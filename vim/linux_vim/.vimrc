@@ -24,11 +24,11 @@ set number
 set relativenumber
 filetype on
 filetype plugin on              "载入文件类型插件
-set shiftwidth=2
-set softtabstop=2
+set shiftwidth=4
+set softtabstop=4
 set et	           "编辑时把所有制表符替换为空格
 set autoindent
-set ts=2
+set ts=4
 set expandtab
 
 set undodir=~/.vim/.swap/
