@@ -60,7 +60,31 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'altercation/vim-colors-solarized'
 "Plug 'scrooloose/syntastic'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'w0rp/ale'
+Plug 'tmux-plugins/vim-tmux'
+"Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
+
+let g:ale_linters_explicit = 1
+let g:ale_completion_delay = 500
+let g:ale_echo_delay = 20
+let g:ale_lint_delay = 500
+let g:ale_echo_msg_format = '[%linter%] %code: %%s'
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:airline#extensions#ale#enabled = 1
+let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++11'
+let g:ale_c_cppcheck_options = ''
+let g:ale_cpp_cppcheck_options = ''
+
+""present pattern
+"let g:ale_sign_error = "\ue009\ue009"
+"hi! clear SpellBad
+"hi! clear SpellCap
+"hi! clear SpellRare
+"hi! SpellBad gui=undercurl guisp=red
+"hi! SpellCap gui=undercurl guisp=bl
 
 
 " gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
@@ -107,3 +131,9 @@ let g:airline_theme='cool'
 colorscheme default
 set background=light
 
+let g:tmux_navigator_no_mappings = 1
+nnoremap <silent> {Left-Mapping} :TmuxNavigateLeft<cr>
+nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
+nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
+nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
+nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
