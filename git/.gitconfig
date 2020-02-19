@@ -1,0 +1,23 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	email = zhaowei1@sensetime.com
+	name = zhaowei1
+[alias]
+	st=status -sb
+	ci = commit
+	lg=log --graph --decorate --oneline -10
+	co=checkout
+	br=branch
+[gui]
+	encoding = utf-8
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+[lfs]
+	url = http://devcenter.bj.sensetime.com/api/v1/lfs/
+[credential]
+	helper = store
+[credential "ssh://gerrit.bj.sensetime.com"]
+	username=zhaowei1

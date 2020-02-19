@@ -1,0 +1,15 @@
+{
+	"color_scheme": "Packages/Color Scheme - Default/Mariana.sublime-color-scheme",
+	"font_size": 14,
+	"ignored_packages":
+	[
+		""
+	],
+	"theme": "Default.sublime-theme",
+	"vintage_ctrl_keys": true,
+    "drag_text": false,
+    "show_encoding": true,
+    "folder_exclude_patterns": [".svn", ".git", ".hg", "CVS",".vs",".codeblock"],
+    "tab_size": 2,
+	"vintage_start_in_command_mode": true
+}
