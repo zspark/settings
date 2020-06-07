@@ -25,10 +25,14 @@ filetype on
 "filetype plugin on              "载入文件类型插件
 set shiftwidth=4
 set softtabstop=4
-"set et	           "编辑时把所有制表符替换为空格
+"set et               "编辑时把所有制表符替换为空格
 set autoindent
 set ts=4
-"set expandtab
+set expandtab
+"set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
+"set listchars=eol:$,tab:>-
+set listchars=tab:>-
+set list
 
 set undodir=~/.vim/.swap/
 set backupdir=~/.vim/.swap/
@@ -50,6 +54,8 @@ set incsearch
 "set shell=D:\bash\
 "set shell=\"C:\Program\ Files\Git\bin\bash.exe\"\
 
+au FileType c,cpp,h,hpp,C,CPP,H,HPP,Hpp,Cpp,java map <F12> :%!astyle --mode=c --style=google -n -s4pk1W1xWw<CR> 
+
 set t_Co=256
 call plug#begin('~/.vim/.plug')
 Plug 'scrooloose/nerdtree'
@@ -60,8 +66,9 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'altercation/vim-colors-solarized'
 "Plug 'scrooloose/syntastic'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'pangloss/vim-javascript'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
-
 
 " gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
 let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
@@ -83,8 +90,6 @@ if !isdirectory(s:vim_tags)
    silent! call mkdir(s:vim_tags, 'p')
 endif
 
-
-
 map <F2> :silent! NERDTreeToggle<CR>
 let NERDTreeWinPos="left"   "将窗口显示在右边
 let g:NERDTreeDirArrows = 1
@@ -92,10 +97,20 @@ let g:NERDTreeDirArrowExpandable = '+'
 let g:NERDTreeDirArrowCollapsible = '-'
 let g:NERDTreeDirArrowCollapsible = '-'
 
+" ctrlp usage -> http://ctrlpvim.github.io/ctrlp.vim/#installation
 let g:ctrlp_max_files=0
 let g:ctrlp_max_depth=40
 let g:ctrlp_use_caching=1
-let g:ctrlp_working_path_mode = ""
+let g:ctrlp_working_path_mode = "ra"
+let g:ctrlp_match_window_bottom=1
+let g:ctrlp_max_height=15
+let g:ctrlp_match_window_reversed=0
+let g:ctrlp_mruf_max=500
+let g:ctrlp_follow_symlinks=1
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+    \ }
 
 
 let g:airline_powerline_fonts = 0
@@ -106,4 +121,3 @@ let g:airline_theme='cool'
 
 colorscheme default
 set background=light
-
