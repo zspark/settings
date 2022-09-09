@@ -1,23 +1,39 @@
 # This is Git's per-user configuration file.
 [user]
 # Please adapt and uncomment the following lines:
-	email = zhaowei1@sensetime.com
-	name = zhaowei1
+	name = 赵伟(10027299)
+	email = zhaow-m@glodon.com
 [alias]
 	st=status -sb
-	ci = commit
-	lg=log --graph --decorate --oneline -10
+	ci=commit
+	cia=commit --amend
+
+	lg=log --decorate --graph -10 --oneline
+	lgs=log --decorate --graph -10 --oneline --stat
+	lgp=log --decorate --graph -1 --oneline -p
+	lga=log --decorate --graph -10 --oneline --all
+	lgas=log --decorate --graph -10 --oneline --all --stat
+	lgsa=log --decorate --graph -10 --oneline --all --stat
 	co=checkout
+	ss=show --stat
+	ft=fetch
 	br=branch
-[gui]
-	encoding = utf-8
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	required = true
-[lfs]
-	url = http://devcenter.bj.sensetime.com/api/v1/lfs/
-[credential]
-	helper = store
-[credential "ssh://gerrit.bj.sensetime.com"]
-	username=zhaowei1
+	df=diff
+	dfc=diff --cached
+	dft=difftool
+	rh=reset --hard
+	cp=cherry-pick
+	ai=add -i
+	au=add -u
+	aA=add -A
+	sb=show-branch
+	sw=switch
+	rb=rebase
+[diff]
+	tool = smerge
+[difftool]
+	prompt=false
+[merge]
+	tool=smerge
+[mergetool]
+	prompt=false

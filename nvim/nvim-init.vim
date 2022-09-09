@@ -55,13 +55,25 @@ set ttimeoutlen=50
 " delays and poor user experience.
 set updatetime=100
 
+
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
 if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
+    " Recently vim can merge signcolumn and number column into one
+    set signcolumn=number
 else
-  set signcolumn=yes
+    set signcolumn=yes
+endif
+
+if &term =~ "xterm\\|rxvt"
+    " use an orange cursor in insert mode
+    let &t_SI = "\<Esc>]12;orange\x7"
+    " use a red cursor otherwise
+    let &t_EI = "\<Esc>]12;red\x7"
+    silent !echo -ne "\033]12;red\007"
+    " reset cursor when vim exits
+    autocmd VimLeave * silent !echo -ne "\033]112\007"
+    " use \003]12;gray\007 for gnome-terminal
 endif
 
 "===================================================================================================
@@ -77,6 +89,8 @@ endif
 " global shortcut;
 nmap <F12> :tabnew \|:term<CR>
 map <A-q> :q<CR>
+map <F2> :checktime<CR>
+nnoremap <leader>tn :tabnew<CR>
 "
 "
 "
@@ -105,7 +119,8 @@ Plug 'airblade/vim-gitgutter'
 "
 "Plug 'sainnhe/sonokai'
 "Plug 'altercation/vim-colors-solarized'
-Plug 'nlknguyen/papercolor-theme'
+"Plug 'nlknguyen/papercolor-theme'
+Plug 'sonph/onehalf', { 'rtp': 'vim' }
 "
 
 " If you don't have nodejs and yarn
@@ -124,43 +139,43 @@ call plug#end()
 "===================================================================================================
 " gitgutter
 function! GitStatus()
-  let [a,m,r] = GitGutterGetHunkSummary()
-  return printf('+%d ~%d -%d', a, m, r)
+    let [a,m,r] = GitGutterGetHunkSummary()
+    return printf('+%d ~%d -%d', a, m, r)
 endfunction
 "
 function! GitBranch()
-  let _str=gitbranch#name()
-  return printf('GIT:%s', _str)
+    let _str=gitbranch#name()
+    return printf('%s', _str)
 endfunction
 "
 "
 "===================================================================================================
 " lightline
 let g:lightline = {
-      \ 'colorscheme': 'PaperColor',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'lineinfo' ],[ 'percent' ],[ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'GitBranch',
-      \   'cocstatus': 'coc#status',
-      \   'status': 'GitStatus'
-      \ },
-      \ 'mode_map': {
-      \ 'n' : 'N',
-      \ 'i' : 'I',
-      \ 'R' : 'R',
-      \ 'v' : 'V',
-      \ 'V' : 'VL',
-      \ "\<C-v>": 'VB',
-      \ 'c' : 'C',
-      \ 's' : 'S',
-      \ 'S' : 'SL',
-      \ "\<C-s>": 'SB',
-      \ 't': 'T',
-      \ },
-      \ }
+            \ 'colorscheme': 'PaperColor',
+            \ 'active': {
+                \   'left': [ [ 'mode', 'paste' ], [  'readonly', 'filename','gitbranch', 'modified' ] ],
+                \   'right': [ [ 'lineinfo' ],[ 'percent' ],[ 'fileformat', 'fileencoding', 'filetype' ] ]
+                \ },
+                \ 'component_function': {
+                    \   'gitbranch': 'GitBranch',
+                    \   'cocstatus': 'coc#status',
+                    \   'status': 'GitStatus'
+                    \ },
+                    \ 'mode_map': {
+                        \ 'n' : 'N',
+                        \ 'i' : 'I',
+                        \ 'R' : 'R',
+                        \ 'v' : 'V',
+                        \ 'V' : 'VL',
+                        \ "\<C-v>": 'VB',
+                        \ 'c' : 'C',
+                        \ 's' : 'S',
+                        \ 'S' : 'SL',
+                        \ "\<C-s>": 'SB',
+                        \ 't': 'T',
+                        \ },
+                        \ }
 "
 "
 "===================================================================================================
@@ -178,19 +193,19 @@ let g:fzf_buffers_jump = 1
 " Customize fzf colors to match your color scheme
 " - fzf#wrap translates this to a set of `--color` options
 let g:fzf_colors =
-      \ { 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'border':  ['fg', 'Ignore'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment'] }
+            \ { 'fg':      ['fg', 'Normal'],
+            \ 'bg':      ['bg', 'Normal'],
+            \ 'hl':      ['fg', 'Comment'],
+            \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+            \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+            \ 'hl+':     ['fg', 'Statement'],
+            \ 'info':    ['fg', 'PreProc'],
+            \ 'border':  ['fg', 'Ignore'],
+            \ 'prompt':  ['fg', 'Conditional'],
+            \ 'pointer': ['fg', 'Exception'],
+            \ 'marker':  ['fg', 'Keyword'],
+            \ 'spinner': ['fg', 'Label'],
+            \ 'header':  ['fg', 'Comment'] }
 "
 " Enable per-command history
 " - History files will be stored in the specified directory
@@ -278,13 +293,13 @@ nmap <silent> <C-]> <Plug>(coc-definition)
 "
 " Use K to show documentation in preview window.
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    elseif (coc#rpc#ready())
+        call CocActionAsync('doHover')
+    else
+        execute '!' . &keywordprg . " " . expand('<cword>')
+    endif
 endfunction
 nmap <silent> K :call <SID>show_documentation()<CR>
 "
@@ -318,7 +333,8 @@ map <nowait> <A-o> :CocList outline<cr>
 "
 "===================================================================================================
 " color scheme
-colorscheme PaperColor
+"colorscheme PaperColor
+colorscheme onehalfdark
 set background=dark
 "
 "
