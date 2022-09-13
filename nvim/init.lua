@@ -6,9 +6,24 @@ local fn = vim.fn
 --
 --
 --
+g.nocompatible=true
+g.autoread=true
+g.encoding="utf-8"
+g.on=true
+g.enable=true
+g.ruler=true
+g.showcmd=true
 g.mapleader = ","
+g.nobackup=true       --"no backup files
+g.nowritebackup=true  --"only in case you don't want a backup file while editing
+g.noswapfile=true     --"no swap files
+g.undodir="~/.config/nvim/.swap/"
+g.backupdir="~/.config/nvim/.swap/"
+g.directory="~/.config/nvim/.swap/"
 opt.completeopt = {'menuone', 'noinsert', 'noselect'}  -- Completion options (for deoplete)
 opt.expandtab = true                -- Use spaces instead of tabs
+opt.autoindent=true
+opt.ts=4
 opt.hidden = true                   -- Enable background buffers
 opt.ignorecase = true               -- Ignore case
 opt.joinspaces = false              -- No double spaces with join
@@ -27,6 +42,18 @@ opt.tabstop = 2                     -- Number of spaces tabs count for
 opt.termguicolors = true            -- True color support
 opt.wildmode = {'list', 'longest'}  -- Command-line completion mode
 opt.wrap = false                    -- Disable line wrap
+opt.cursorline = true
+opt.hlsearch=true
+opt.incsearch=true
+opt.ttimeoutlen=50
+opt.updatetime=100
+--
+--
+--
+--
+cmd "set syn=on"
+cmd "set syntax=enable"
+--
 --
 --
 --
@@ -58,7 +85,7 @@ _packer.startup(function(use)
   use "zSpark/packer.nvim"
   use "zSpark/nvim-web-devicons"
   use "zSpark/plenary.nvim"
-  --use "zSpark/nvim-treesitter"
+  use "zSpark/nvim-treesitter"
   use { "zSpark/telescope.nvim", requires = { {"zSpark/plenary.nvim"} }, }
   use "zSpark/nightfox.nvim"
   use "zSpark/mason.nvim"
@@ -73,8 +100,7 @@ _packer.startup(function(use)
     end,
   }
   use 'zSpark/gitsigns.nvim'
-  use {
-    'zSpark/nvim-tree.lua',
+  use { 'zSpark/nvim-tree.lua',
     requires = {
       'zSpark/nvim-web-devicons', -- optional, for file icons
     },
@@ -123,14 +149,14 @@ local lspconfig_on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_opts)
+  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', lsp_opts)
+  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', lsp_opts)
+  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_opts)
+  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_opts)
+  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', lsp_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-A-l>', '<cmd>lua vim.lsp.buf.formatting()<CR>', lsp_opts)
 end
 require("lspconfig").tsserver.setup {
   on_attach = lspconfig_on_attach,
@@ -226,10 +252,12 @@ require('gitsigns').setup{
 --
 --
 --
+--
 --[[
 for _, config in pairs(require("nvim-treesitter.parsers").get_parser_configs()) do
   config.install_info.url = config.install_info.url:gsub("https://github.com/", "https://gitee.com/")
 end
+]]
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all"
   ensure_installed = {  "javascript" },
@@ -263,7 +291,6 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
-]]
 -- /////////// end of config
 -- /////////////////////////////////////////////////////////////////////////////////
 --
@@ -286,6 +313,41 @@ map("n", "<C-e>", "<cmd>lua require('telescope.builtin').buffers()<CR>")
 --
 --
 --
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+--
+local Plug = vim.fn['plug#']
+vim.call('plug#begin', '~/.config/nvim/.plug')
+--Plug 'francoiscabrol/ranger.vim'
+Plug 'rbgrouleff/bclose.vim'
+--Plug 'sainnhe/sonokai'
+--Plug 'altercation/vim-colors-solarized'
+--Plug 'nlknguyen/papercolor-theme'
+Plug 'itchyny/lightline.vim'
+Plug ('sonph/onehalf', { rtp= 'vim' })
+--Plug ('iamcco/markdown-preview.nvim', { do= 'cd app && yarn install'  })
+Plug 'fioncat/vim-bufclean'
+vim.call('plug#end')
+
+
+
+
+
+--cmd [[colorscheme nightfox]]
+cmd [[colorscheme onehalfdark]]
+--
+--
+--
+--
 --[[
 g.lightline = {
 colorscheme= 'dayfox',
@@ -297,16 +359,3 @@ component= { gitbranch= 'GitBranch', gitstatus='b:gitsigns_status' },
 mode_map= { n= 'N', i= 'I', R= 'R', v= 'V', V= 'VL', c= 'C', s= 'S', S= 'SL', t= 'T', },
 }
 ]]
---
---
---
---
---
---
---
---
---
-cmd [[colorscheme nightfox]]
---
---
---
