@@ -2,6 +2,7 @@ local cmd = vim.cmd  -- to execute Vim commands e.g. cmd('pwd')
 local opt = vim.opt  -- to set options
 local g = vim.g
 local fn = vim.fn
+local api = vim.api
 --
 --
 --
@@ -32,13 +33,13 @@ opt.number = true                   -- Show line numbers
 opt.relativenumber = true           -- Relative line numbers
 opt.scrolloff = 4                   -- Lines of context
 opt.shiftround = true               -- Round indent
-opt.shiftwidth = 2                  -- Size of an indent
+opt.shiftwidth = 4                  -- Size of an indent
 opt.sidescrolloff = 8               -- Columns of context
 opt.smartcase = true                -- Do not ignore case with capitals
 opt.smartindent = true              -- Insert indents automatically
 opt.splitbelow = true               -- Put new windows below current
 opt.splitright = true               -- Put new windows right of current
-opt.tabstop = 2                     -- Number of spaces tabs count for
+opt.tabstop = 4                     -- Number of spaces tabs count for
 opt.termguicolors = true            -- True color support
 opt.wildmode = {'list', 'longest'}  -- Command-line completion mode
 opt.wrap = false                    -- Disable line wrap
@@ -110,6 +111,7 @@ _packer.startup(function(use)
     end
   }
   use "zSpark/nvim-lspconfig"
+  use "zSpark/nvim-cmp"
   -- automatically set up your configuration after cloning packer.nvim
   -- put this at the end after all plugins
   if packer_bootstrap then
@@ -123,6 +125,28 @@ end)
 --
 -- /////////////////////////////////////////////////////////////////////////////////
 -- /////////// configs
+local cmp=require("cmp");
+cmp.setup({
+  mapping = cmp.mapping.preset.insert({
+      --['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      --['<C-f>'] = cmp.mapping.scroll_docs(4),
+      --['<C-Space>'] = cmp.mapping.complete(),
+      --['<C-e>'] = cmp.mapping.abort(),
+      --['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      --{ name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+      { name = 'path' },
+      { name = 'cmdline' },
+    })
+  })
+
 require("mason").setup({
     ui = {
         icons = {
@@ -147,8 +171,8 @@ local lspconfig_on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', lsp_opts)
+  --vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', lsp_opts)
+  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', lsp_opts)
   --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', lsp_opts)
   --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', lsp_opts)
   --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_opts)
@@ -161,6 +185,17 @@ end
 require("lspconfig").tsserver.setup {
   on_attach = lspconfig_on_attach,
 }
+require("lspconfig").clangd.setup {
+  on_attach = lspconfig_on_attach,
+}
+require("lspconfig")["grammarly"].setup { }
+require("lspconfig")["html"].setup { }
+require("lspconfig")["jsonls"].setup { }
+require("lspconfig")["cssls"].setup { }
+require'lspconfig'.luau_lsp.setup{
+  on_attach = lspconfig_on_attach,
+}
+
 --
 --
 --
@@ -178,7 +213,7 @@ require('gitsigns').setup{
   signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
   numhl      = true, -- Toggle with `:Gitsigns toggle_numhl`
   linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
-  word_diff  = true, -- Toggle with `:Gitsigns toggle_word_diff`
+  word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
   watch_gitdir = {
     interval = 1000,
     follow_files = true
@@ -230,20 +265,20 @@ require('gitsigns').setup{
     end, {expr=true})
 
     -- Actions
-    map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>')
-    map({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>')
-    map('n', '<leader>hS', gs.stage_buffer)
-    map('n', '<leader>hu', gs.undo_stage_hunk)
-    map('n', '<leader>hR', gs.reset_buffer)
-    map('n', '<leader>hp', gs.preview_hunk)
-    map('n', '<leader>hb', function() gs.blame_line{full=true} end)
-    map('n', '<leader>tb', gs.toggle_current_line_blame)
-    map('n', '<leader>hd', gs.diffthis)
-    map('n', '<leader>hD', function() gs.diffthis('~') end)
-    map('n', '<leader>td', gs.toggle_deleted)
+    --map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>')
+    --map({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>')
+    --map('n', '<leader>hS', gs.stage_buffer)
+    --map('n', '<leader>hu', gs.undo_stage_hunk)
+    --map('n', '<leader>hR', gs.reset_buffer)
+    map('n', '<C-g>', gs.preview_hunk)
+    --map('n', '<leader>hb', function() gs.blame_line{full=true} end)
+    --map('n', '<leader>tb', gs.toggle_current_line_blame)
+    --map('n', '<leader>hd', gs.diffthis)
+    --map('n', '<leader>hD', function() gs.diffthis('~') end)
+    --map('n', '<leader>td', gs.toggle_deleted)
 
     -- Text object
-    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+    --map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
   end
 }
 --
@@ -291,6 +326,52 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
+local previewers = require("telescope.previewers")
+local new_maker = function(filepath, bufnr, opts)
+  opts = opts or {}
+
+  filepath = vim.fn.expand(filepath)
+  vim.loop.fs_stat(filepath, function(_, stat)
+    if not stat then return end
+    if stat.size > 100000 then
+      return
+    else
+      previewers.buffer_previewer_maker(filepath, bufnr, opts)
+    end
+  end)
+end
+require('telescope').setup{
+  defaults = {
+    buffer_previewer_maker = new_maker,
+    -- Default configuration for telescope goes here:
+    -- config_key = value,
+    mappings = {
+      i = {
+        -- map actions.which_key to <C-h> (default: <C-/>)
+        -- actions.which_key shows the mappings for your picker,
+        -- e.g. git_{create, delete, ...}_branch for the git_branches picker
+        ["<C-h>"] = "which_key"
+      }
+    }
+  },
+  pickers = {
+    -- Default configuration for builtin pickers goes here:
+    -- picker_name = {
+    --   picker_config_key = value,
+    --   ...
+    -- }
+    -- Now the picker_config_key will be applied every time you call this
+    -- builtin picker
+  },
+  extensions = {
+    -- Your extension configuration goes here:
+    -- extension_name = {
+    --   extension_config_key = value,
+    -- }
+    -- please take a look at the readme of the extension you want to configure
+  }
+}
 -- /////////// end of config
 -- /////////////////////////////////////////////////////////////////////////////////
 --
@@ -304,12 +385,12 @@ local function map(mode, lhs, rhs, opts)
   if opts then options = vim.tbl_extend('force', options, opts) end
   vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
-map("", "<A-q>", "<cmd>:q<CR>")
-map("", "<leader>e", "<cmd>:NvimTreeToggle<CR>")
 -- # Add global bindings for telescope.nvim
-map("n", "<C-p>", "<cmd>lua require('telescope.builtin').find_files()<CR>")
-map("n", "<C-f>", "<cmd>lua require('telescope.builtin').live_grep()<CR>")
+map("n", "<C-f>", "<cmd>lua require('telescope.builtin').find_files()<CR>")
 map("n", "<C-e>", "<cmd>lua require('telescope.builtin').buffers()<CR>")
+map("n", "<C-A-f>", "<cmd>lua require('telescope.builtin').live_grep()<CR>")
+map("n", "<C-A-d>", "<cmd>lua require('telescope.builtin').diagnostics()<CR>")
+map("n", "<A-o>", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>")
 --
 --
 --
@@ -328,14 +409,18 @@ map("n", "<C-e>", "<cmd>lua require('telescope.builtin').buffers()<CR>")
 local Plug = vim.fn['plug#']
 vim.call('plug#begin', '~/.config/nvim/.plug')
 --Plug 'francoiscabrol/ranger.vim'
-Plug 'rbgrouleff/bclose.vim'
+--Plug 'rbgrouleff/bclose.vim'
 --Plug 'sainnhe/sonokai'
 --Plug 'altercation/vim-colors-solarized'
 --Plug 'nlknguyen/papercolor-theme'
-Plug 'itchyny/lightline.vim'
+--Plug 'itchyny/lightline.vim'
 Plug ('sonph/onehalf', { rtp= 'vim' })
 --Plug ('iamcco/markdown-preview.nvim', { do= 'cd app && yarn install'  })
 Plug 'fioncat/vim-bufclean'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
 vim.call('plug#end')
 
 
@@ -343,7 +428,33 @@ vim.call('plug#end')
 
 
 --cmd [[colorscheme nightfox]]
-cmd [[colorscheme onehalfdark]]
+cmd [[colorscheme nightfox]]
+cmd [[nnoremap <leader>bc :BufClean<CR>]]
+cmd [[nnoremap <leader>n :tabnew<CR>]]
+cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
+cmd [[nnoremap <leader>t :Telescope<CR>]]
+cmd [[nnoremap <leader>m :Mason<CR>]]
+cmd [[nnoremap <leader>g :Gitsigns<CR>]]
+cmd [[nnoremap <A-q> :q<CR>]]
+cmd [[map <F2> :checktime<CR>]]
+cmd [[nmap <leader>w :w!<cr>]]
+cmd [[map <C-j> <C-W>j]]
+cmd [[map <C-k> <C-W>k]]
+cmd [[map <C-h> <C-W>h]]
+cmd [[map <C-l> <C-W>l]]
+cmd [[map <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/]]
+-- Move a line of text using ALT+[jk] or Command+[jk] on mac
+cmd [[nmap <A-j> mz:m+<cr>`z]]
+cmd [[nmap <A-k> mz:m-2<cr>`z]]
+cmd [[vmap <A-j> :m'>+<cr>`<my`>mzgv`yo`z]]
+cmd [[vmap <A-k> :m'<-2<cr>`>my`<mzgv`yo`z]]
+cmd [[map <C-t><C-t> :tabnew<CR>]]
+cmd [[map <C-t><C-w> :tabclose<CR>]]
+--cmd [[nnoremap <CR> o<esc>]]
+--cmd [[nnoremap ? :!]]
+cmd [[inoremap jk <esc>]]
+
+
 --
 --
 --
@@ -359,3 +470,33 @@ component= { gitbranch= 'GitBranch', gitstatus='b:gitsigns_status' },
 mode_map= { n= 'N', i= 'I', R= 'R', v= 'V', V= 'VL', c= 'C', s= 'S', S= 'SL', t= 'T', },
 }
 ]]
+opt.foldenable=true
+opt.foldmethod = "expr"
+opt.foldexpr = "nvim_treesitter#foldexpr()"
+--cmd [[autocmd BufReadPost,FileReadPost * normal zR]]
+
+local M = {}
+-- function to create a list of commands and convert them to autocommands
+-------- This function is taken from https://github.com/norcalli/nvim_utils
+function M.nvim_create_augroups(definitions)
+    for group_name, definition in pairs(definitions) do
+        api.nvim_command('augroup '..group_name)
+        api.nvim_command('autocmd!')
+        for _, def in ipairs(definition) do
+            local command = table.concat(vim.tbl_flatten{'autocmd', def}, ' ')
+            api.nvim_command(command)
+        end
+        api.nvim_command('augroup END')
+    end
+end
+local autoCommands = {
+    -- other autocommands
+    open_folds = {
+        {"BufReadPost,FileReadPost", "*", "normal zR"}
+    }
+}
+M.nvim_create_augroups(autoCommands)
+
+
+
+
