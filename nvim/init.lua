@@ -54,7 +54,7 @@ opt.linebreak=true
 --
 --
 --
-cmd "set syn=on"
+cmd "syn on"
 cmd "set syntax=enable"
 cmd "set listchars=tab:>-"
 --
@@ -296,7 +296,7 @@ end
 ]]
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all"
-  ensure_installed = {  "javascript" },
+  ensure_installed = {  "javascript","lua" },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
