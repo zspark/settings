@@ -14,6 +14,7 @@ g.on=true
 g.enable=true
 g.ruler=true
 g.showcmd=true
+g.showmatch=true
 g.mapleader = ","
 g.nobackup=true       --"no backup files
 g.nowritebackup=true  --"only in case you don't want a backup file while editing
@@ -42,12 +43,13 @@ opt.splitright = true               -- Put new windows right of current
 opt.tabstop = 4                     -- Number of spaces tabs count for
 opt.termguicolors = true            -- True color support
 opt.wildmode = {'list', 'longest'}  -- Command-line completion mode
-opt.wrap = false                    -- Disable line wrap
 opt.cursorline = true
 opt.hlsearch=true
 opt.incsearch=true
 opt.ttimeoutlen=50
 opt.updatetime=100
+opt.wrap=true
+opt.linebreak=true
 --
 --
 --
@@ -185,19 +187,15 @@ local lspconfig_on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-A-l>', '<cmd>lua vim.lsp.buf.formatting()<CR>', lsp_opts)
 end
-require("lspconfig").tsserver.setup {
-  on_attach = lspconfig_on_attach,
-}
-require("lspconfig").clangd.setup {
-  on_attach = lspconfig_on_attach,
-}
-require("lspconfig")["grammarly"].setup { }
-require("lspconfig")["html"].setup { }
-require("lspconfig")["jsonls"].setup { }
-require("lspconfig")["cssls"].setup { }
-require'lspconfig'.luau_lsp.setup{
-  on_attach = lspconfig_on_attach,
-}
+local _lsp = require("lspconfig");
+_lsp["tsserver"].setup { on_attach = lspconfig_on_attach, }
+_lsp["clangd"].setup { on_attach = lspconfig_on_attach, }
+_lsp["luau_lsp"].setup{ on_attach = lspconfig_on_attach, }
+_lsp["grammarly"].setup { }
+_lsp["html"].setup { }
+_lsp["jsonls"].setup { }
+_lsp["cssls"].setup { }
+_lsp["pyright"].setup { }
 
 --
 --
@@ -273,7 +271,7 @@ require('gitsigns').setup{
     --map('n', '<leader>hS', gs.stage_buffer)
     --map('n', '<leader>hu', gs.undo_stage_hunk)
     --map('n', '<leader>hR', gs.reset_buffer)
-    map('n', '<C-g>', gs.preview_hunk)
+    map('n', '<leader>gd', gs.preview_hunk)
     --map('n', '<leader>hb', function() gs.blame_line{full=true} end)
     --map('n', '<leader>tb', gs.toggle_current_line_blame)
     --map('n', '<leader>hd', gs.diffthis)
@@ -433,36 +431,40 @@ vim.call('plug#end')
 --cmd [[colorscheme nightfox]]
 cmd [[colorscheme nightfox]]
 cmd [[nnoremap <leader>bc :BufClean<CR>]]
-cmd [[nnoremap <leader>n :tabnew<CR>]]
-cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
 cmd [[nnoremap <leader>t :Telescope<CR>]]
---cmd [[map <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/]]
+cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
+--cmd [[map <leader>te :tabedit <C-r>=expand("%:p:h")<CR>/]]
 cmd [[nnoremap <leader>m :Mason<CR>]]
 cmd [[nnoremap <leader>g :Gitsigns<CR>]]
 cmd [[nnoremap <A-q> :q<CR>]]
 cmd [[map <F2> :checktime<CR>]]
-cmd [[nmap <leader>w :w!<cr>]]
+cmd [[nmap <leader>s :w!<CR>]]
+
 cmd [[map <C-j> <C-W>j]]
 cmd [[map <C-k> <C-W>k]]
 cmd [[map <C-h> <C-W>h]]
 cmd [[map <C-l> <C-W>l]]
 -- Move a line of text using ALT+[jk] or Command+[jk] on mac
-cmd [[nmap <silent><A-j> :m+<cr>]]
-cmd [[nmap <silent><A-k> :m-2<cr>]]
-cmd [[vmap <silent><A-j> :m'>+<cr>`<my`>mzgv`yo`z]]
-cmd [[vmap <silent><A-k> :m'<-2<cr>`>my`<mzgv`yo`z]]
+cmd [[nmap <A-j> mz:m+<CR>`z]]
+cmd [[nmap <A-k> mz:m-2<CR>`z]]
+cmd [[vmap <A-j> :m'>+<CR>`<my`>mzgv`yo`z]]
+cmd [[vmap <A-k> :m'<-2<CR>`>my`<mzgv`yo`z]]
+
 cmd [[map <C-t><C-t> :tabnew<CR>]]
 cmd [[map <C-t><C-w> :tabclose<CR>]]
-cmd [[noremap <silent><leader>1 :tabn 1<cr>]]
-cmd [[noremap <silent><leader>2 :tabn 2<cr>]]
-cmd [[noremap <silent><leader>3 :tabn 3<cr>]]
-cmd [[noremap <silent><leader>4 :tabn 4<cr>]]
-cmd [[noremap <silent><leader>5 :tabn 5<cr>]]
-cmd [[noremap <silent><leader>6 :tabn 6<cr>]]
-cmd [[noremap <silent><leader>7 :tabn 7<cr>]]
-cmd [[noremap <silent><leader>8 :tabn 8<cr>]]
-cmd [[noremap <silent><leader>9 :tabn 9<cr>]]
-cmd [[noremap <silent><leader>0 :tabn 10<cr>]]
+cmd [[nnoremap <leader>n :tabnew<CR>]]
+cmd [[nnoremap <leader>c :tabclose<CR>]]
+
+cmd [[noremap <silent><leader>1 :tabn 1<CR>]]
+cmd [[noremap <silent><leader>2 :tabn 2<CR>]]
+cmd [[noremap <silent><leader>3 :tabn 3<CR>]]
+cmd [[noremap <silent><leader>4 :tabn 4<CR>]]
+cmd [[noremap <silent><leader>5 :tabn 5<CR>]]
+cmd [[noremap <silent><leader>6 :tabn 6<CR>]]
+cmd [[noremap <silent><leader>7 :tabn 7<CR>]]
+cmd [[noremap <silent><leader>8 :tabn 8<CR>]]
+cmd [[noremap <silent><leader>9 :tabn 9<CR>]]
+cmd [[noremap <silent><leader>0 :tabn 10<CR>]]
 --cmd [[nnoremap <CR> o<esc>]]
 --cmd [[nnoremap ? :!]]
 cmd [[inoremap jk <esc>]]
