@@ -54,9 +54,9 @@ opt.linebreak=true
 --
 --
 --
-cmd "syn on"
 cmd "set syntax=enable"
 cmd "set listchars=tab:>-"
+cmd "syn on"
 --
 --
 --
@@ -191,11 +191,11 @@ local _lsp = require("lspconfig");
 _lsp["tsserver"].setup { on_attach = lspconfig_on_attach, }
 _lsp["clangd"].setup { on_attach = lspconfig_on_attach, }
 _lsp["luau_lsp"].setup{ on_attach = lspconfig_on_attach, }
-_lsp["grammarly"].setup { }
-_lsp["html"].setup { }
-_lsp["jsonls"].setup { }
-_lsp["cssls"].setup { }
-_lsp["pyright"].setup { }
+_lsp["grammarly"].setup { on_attach = lspconfig_on_attach,}
+_lsp["html"].setup {on_attach = lspconfig_on_attach, }
+_lsp["jsonls"].setup { on_attach = lspconfig_on_attach,}
+_lsp["cssls"].setup { on_attach = lspconfig_on_attach,}
+_lsp["pyright"].setup { on_attach = lspconfig_on_attach,}
 
 --
 --
@@ -289,45 +289,6 @@ require('gitsigns').setup{
 --
 --
 --
---[[
-for _, config in pairs(require("nvim-treesitter.parsers").get_parser_configs()) do
-  config.install_info.url = config.install_info.url:gsub("https://github.com/", "https://gitee.com/")
-end
-]]
-require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all"
-  ensure_installed = {  "javascript","lua" },
-
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = false,
-
-  -- Automatically install missing parsers when entering buffer
-  auto_install = true,
-
-  -- List of parsers to ignore installing (for "all")
-  -- ignore_install = { "javascript" },
-
-  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
-
-    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-    -- the name of the parser)
-    -- list of language that will be disabled
-    -- disable = { "c", "javascript" },
-
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-}
-
 local previewers = require("telescope.previewers")
 local new_maker = function(filepath, bufnr, opts)
   opts = opts or {}
@@ -389,8 +350,8 @@ end
 -- # Add global bindings for telescope.nvim
 map("n", "<C-f>", "<cmd>lua require('telescope.builtin').find_files()<CR>")
 map("n", "<C-e>", "<cmd>lua require('telescope.builtin').buffers()<CR>")
-map("n", "<C-A-f>", "<cmd>lua require('telescope.builtin').live_grep()<CR>")
-map("n", "<C-A-d>", "<cmd>lua require('telescope.builtin').diagnostics()<CR>")
+map("n", "<A-/>", "<cmd>lua require('telescope.builtin').live_grep()<CR>")
+map("n", "<A-d>", "<cmd>lua require('telescope.builtin').diagnostics()<CR>")
 map("n", "<A-o>", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>")
 --
 --
@@ -415,7 +376,7 @@ vim.call('plug#begin', '~/.config/nvim/.plug')
 --Plug 'altercation/vim-colors-solarized'
 --Plug 'nlknguyen/papercolor-theme'
 --Plug 'itchyny/lightline.vim'
-Plug ('sonph/onehalf', { rtp= 'vim' })
+--Plug ('sonph/onehalf', { rtp= 'vim' })
 --Plug ('iamcco/markdown-preview.nvim', { do= 'cd app && yarn install'  })
 Plug 'fioncat/vim-bufclean'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -431,14 +392,14 @@ vim.call('plug#end')
 --cmd [[colorscheme nightfox]]
 cmd [[colorscheme nightfox]]
 cmd [[nnoremap <leader>bc :BufClean<CR>]]
-cmd [[nnoremap <leader>t :Telescope<CR>]]
+---cmd [[nnoremap <leader>t :Telescope<CR>]]
 cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
 --cmd [[map <leader>te :tabedit <C-r>=expand("%:p:h")<CR>/]]
-cmd [[nnoremap <leader>m :Mason<CR>]]
-cmd [[nnoremap <leader>g :Gitsigns<CR>]]
+---cmd [[nnoremap <leader>m :Mason<CR>]]
+---cmd [[nnoremap <leader>g :Gitsigns<CR>]]
 cmd [[nnoremap <A-q> :q<CR>]]
 cmd [[map <F2> :checktime<CR>]]
-cmd [[nmap <leader>s :w!<CR>]]
+cmd [[nmap <leader>w :w!<CR>]]
 
 cmd [[map <C-j> <C-W>j]]
 cmd [[map <C-k> <C-W>k]]
@@ -450,8 +411,6 @@ cmd [[nmap <A-k> mz:m-2<CR>`z]]
 cmd [[vmap <A-j> :m'>+<CR>`<my`>mzgv`yo`z]]
 cmd [[vmap <A-k> :m'<-2<CR>`>my`<mzgv`yo`z]]
 
-cmd [[map <C-t><C-t> :tabnew<CR>]]
-cmd [[map <C-t><C-w> :tabclose<CR>]]
 cmd [[nnoremap <leader>n :tabnew<CR>]]
 cmd [[nnoremap <leader>c :tabclose<CR>]]
 
@@ -590,14 +549,15 @@ component= { gitbranch= 'GitBranch', gitstatus='b:gitsigns_status' },
 mode_map= { n= 'N', i= 'I', R= 'R', v= 'V', V= 'VL', c= 'C', s= 'S', S= 'SL', t= 'T', },
 }
 ]]
-opt.foldenable=true
-opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()"
+--opt.foldenable=true
+--opt.foldmethod = "expr"
+--opt.foldexpr = "nvim_treesitter#foldexpr()"
 --cmd [[autocmd BufReadPost,FileReadPost * normal zR]]
 
-local M = {}
 -- function to create a list of commands and convert them to autocommands
 -------- This function is taken from https://github.com/norcalli/nvim_utils
+--[[
+local M = {}
 function M.nvim_create_augroups(definitions)
     for group_name, definition in pairs(definitions) do
         api.nvim_command('augroup '..group_name)
@@ -616,6 +576,7 @@ local autoCommands = {
     }
 }
 M.nvim_create_augroups(autoCommands)
+]]
 
 
 
