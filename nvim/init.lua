@@ -616,4 +616,12 @@ M.nvim_create_augroups(autoCommands)
 
 
 
+cmd [[
+let s:is_win = has('win32') || has('win64')
+if s:is_win
+    " ... other Windows specific settings
+
+    nmap <C-z> <Nop>
+endif
+]]
 
