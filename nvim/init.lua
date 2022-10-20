@@ -148,7 +148,7 @@ cmp.setup({
     }, {
       { name = 'buffer' },
       { name = 'path' },
-      { name = 'cmdline' },
+      -- { name = 'cmdline' },
     })
   })
 
@@ -355,7 +355,7 @@ require'nvim-treesitter.configs'.setup {
 
   highlight = {
     -- `false` will disable the whole extension
-    enable = false,
+    enable = true,
 
     -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
@@ -429,13 +429,14 @@ vim.call('plug#end')
 cmd [[colorscheme nightfox]]
 cmd [[nnoremap <leader>bc :BufClean<CR>]]
 ---cmd [[nnoremap <leader>t :Telescope<CR>]]
-cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
+--cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
+cmd [[nnoremap <leader>e :NvimTreeFocus<CR>]]
 --cmd [[map <leader>te :tabedit <C-r>=expand("%:p:h")<CR>/]]
 ---cmd [[nnoremap <leader>m :Mason<CR>]]
 ---cmd [[nnoremap <leader>g :Gitsigns<CR>]]
 cmd [[nnoremap <A-q> :q<CR>]]
 cmd [[map <F2> :checktime<CR>]]
-cmd [[nmap <leader>w :w!<CR>]]
+---cmd [[nmap <leader>w :w!<CR>]]
 
 cmd [[map <C-j> <C-W>j]]
 cmd [[map <C-k> <C-W>k]]
