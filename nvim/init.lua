@@ -272,6 +272,7 @@ require('gitsigns').setup{
     --map('n', '<leader>hu', gs.undo_stage_hunk)
     --map('n', '<leader>hR', gs.reset_buffer)
     map('n', '<leader>gd', gs.preview_hunk)
+    map('n', '<leader>gs', gs.stage_hunk)
     --map('n', '<leader>hb', function() gs.blame_line{full=true} end)
     --map('n', '<leader>tb', gs.toggle_current_line_blame)
     --map('n', '<leader>hd', gs.diffthis)
@@ -384,11 +385,13 @@ local function map(mode, lhs, rhs, opts)
   vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 -- # Add global bindings for telescope.nvim
-map("n", "<C-f>", "<cmd>lua require('telescope.builtin').find_files()<CR>")
 map("n", "<C-e>", "<cmd>lua require('telescope.builtin').buffers()<CR>")
+map("n", "<C-p>", "<cmd>lua require('telescope.builtin').find_files()<CR>")
+map("n", "<C-A-p>", "<cmd>lua require('telescope.builtin').buffers()<CR>")
 map("n", "<A-/>", "<cmd>lua require('telescope.builtin').live_grep()<CR>")
 map("n", "<A-d>", "<cmd>lua require('telescope.builtin').diagnostics()<CR>")
 map("n", "<A-o>", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>")
+map("n", "<C-S-o>", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>")
 --
 --
 --
