@@ -67,7 +67,7 @@ if fn.empty(fn.glob(install_path)) > 0 then
     'git',
     'clone',
     '--depth', '1',
-    'https://gitee.com/zSpark/packer.nvim',
+    'https://github.com/wbthomason/packer.nvim',
     install_path
   })
 end
@@ -81,20 +81,20 @@ _packer.init({
   git={
     depth = 1, -- Git clone depth
     clone_timeout = 60, -- Timeout, in seconds, for git clones
-    default_url_format = 'https://gitee.com/%s' -- Lua format string used for "aaa/bbb" style plugins
+    --default_url_format = 'https://gitee.com/%s' -- Lua format string used for "aaa/bbb" style plugins
   }
 })
 _packer.startup(function(use)
-  use "zSpark/packer.nvim"
-  use "zSpark/nvim-web-devicons"
-  use "zSpark/plenary.nvim"
-  use "zSpark/nvim-treesitter"
-  use { "zSpark/telescope.nvim", requires = { {"zSpark/plenary.nvim"} }, }
-  use "zSpark/nightfox.nvim"
-  use "zSpark/mason.nvim"
-  --use { 'zSpark/barbar.nvim', requires = {'zSpark/nvim-web-devicons'} }
-  use { 'zSpark/lualine.nvim',
-    requires = { 'zSpark/nvim-web-devicons', opt = true },
+  use "wbthomason/packer.nvim"
+  use "nvim-tree/nvim-web-devicons"
+  use "nvim-lua/plenary.nvim"
+  use "nvim-treesitter/nvim-treesitter"
+  use { "nvim-telescope/telescope.nvim", requires = { {"nvim-lua/plenary.nvim"} }, }
+  use "EdenEast/nightfox.nvim"
+  use "williamboman/mason.nvim"
+  --use { 'zSpark/barbar.nvim', requires = {'nvim-tree/nvim-web-devicons'} }
+  use { 'nvim-lualine/lualine.nvim',
+    requires = { 'nvim-tree/nvim-web-devicons', opt = true },
     config = function()
       require('lualine').setup({
         options = {
@@ -103,18 +103,36 @@ _packer.startup(function(use)
       })
     end,
   }
-  use 'zSpark/gitsigns.nvim'
-  use { 'zSpark/nvim-tree.lua',
+  use 'lewis6991/gitsigns.nvim',
+  use { 'nvim-tree/nvim-tree.lua',
     requires = {
-      'zSpark/nvim-web-devicons', -- optional, for file icons
+      'nvim-tree/nvim-web-devicons', -- optional, for file icons
     },
     tag = 'nightly', -- optional, updated every week. (see issue #1193)
     config = function()
       require("nvim-tree").setup()
     end
   }
-  use "zSpark/nvim-lspconfig"
-  use "zSpark/nvim-cmp"
+  use "neovim/nvim-lspconfig"
+  use "hrsh7th/nvim-cmp"
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
+  use 'hrsh7th/cmp-cmdline'
+  --[[
+  use { "folke/which-key.nvim",
+    config = function()
+        vim.o.timeout = true
+        vim.o.timeoutlen = 300
+        require("which-key").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+        }
+    end
+  }
+  --]]
+  use "lukas-reineke/indent-blankline.nvim"
   -- automatically set up your configuration after cloning packer.nvim
   -- put this at the end after all plugins
   if packer_bootstrap then
@@ -205,11 +223,12 @@ _lsp["pyright"].setup { on_attach = lspconfig_on_attach,}
 --
 require('gitsigns').setup{
   signs = {
-    add          = {hl = 'GitSignsAdd'   , text = '│', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
-    change       = {hl = 'GitSignsChange', text = '│', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
     delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
     topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    change       = {hl = 'GitSignsChange', text = '│', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
     changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    untracked    = { text = '┆' },
   },
   signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
   numhl      = true, -- Toggle with `:Gitsigns toggle_numhl`
@@ -269,12 +288,12 @@ require('gitsigns').setup{
     --map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>')
     --map({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>')
     --map('n', '<leader>hS', gs.stage_buffer)
-    --map('n', '<leader>hu', gs.undo_stage_hunk)
     --map('n', '<leader>hR', gs.reset_buffer)
     map('n', '<leader>gd', gs.preview_hunk)
     map('n', '<leader>gs', gs.stage_hunk)
+    map('n', '<leader>gu', gs.undo_stage_hunk)
+    map('n', '<leader>gb', gs.toggle_current_line_blame)
     --map('n', '<leader>hb', function() gs.blame_line{full=true} end)
-    --map('n', '<leader>tb', gs.toggle_current_line_blame)
     --map('n', '<leader>hd', gs.diffthis)
     --map('n', '<leader>hD', function() gs.diffthis('~') end)
     --map('n', '<leader>td', gs.toggle_deleted)
@@ -389,9 +408,9 @@ map("n", "<C-e>", "<cmd>lua require('telescope.builtin').buffers()<CR>")
 map("n", "<C-p>", "<cmd>lua require('telescope.builtin').find_files()<CR>")
 map("n", "<C-A-p>", "<cmd>lua require('telescope.builtin').buffers()<CR>")
 map("n", "<A-/>", "<cmd>lua require('telescope.builtin').live_grep()<CR>")
+map("n", "<C-/>", "<cmd>lua require('telescope.builtin').live_grep()<CR>")
 map("n", "<A-d>", "<cmd>lua require('telescope.builtin').diagnostics()<CR>")
 map("n", "<A-o>", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>")
-map("n", "<C-S-o>", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>")
 --
 --
 --
@@ -418,10 +437,6 @@ vim.call('plug#begin', '~/.config/nvim/.plug')
 --Plug ('sonph/onehalf', { rtp= 'vim' })
 --Plug ('iamcco/markdown-preview.nvim', { do= 'cd app && yarn install'  })
 Plug 'fioncat/vim-bufclean'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
 vim.call('plug#end')
 
 
