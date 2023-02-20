@@ -132,7 +132,34 @@ _packer.startup(function(use)
     end
   }
   --]]
+  -- Lua
+    use {
+    "folke/trouble.nvim",
+    requires = "nvim-tree/nvim-web-devicons",
+    config = function()
+        require("trouble").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+        }
+    end
+    }
   use "lukas-reineke/indent-blankline.nvim"
+  -- Lua
+  use { "folke/todo-comments.nvim",
+    requires = "nvim-lua/plenary.nvim",
+    config = function()
+        require("todo-comments").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+        }
+    end
+  }
+
+
+
+
   -- automatically set up your configuration after cloning packer.nvim
   -- put this at the end after all plugins
   if packer_bootstrap then
@@ -204,6 +231,7 @@ local lspconfig_on_attach = function(client, bufnr)
   --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', lsp_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-A-l>', '<cmd>lua vim.lsp.buf.formatting()<CR>', lsp_opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<A-F>', '<cmd>lua vim.lsp.buf.formatting()<CR>', lsp_opts)
 end
 local _lsp = require("lspconfig");
 _lsp["tsserver"].setup { on_attach = lspconfig_on_attach, }
@@ -414,6 +442,25 @@ map("n", "<A-o>", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<
 --
 --
 --
+-- Lua
+vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>",
+  {silent = true, noremap = true}
+)
+vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>",
+  {silent = true, noremap = true}
+)
+vim.keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>",
+  {silent = true, noremap = true}
+)
+vim.keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>",
+  {silent = true, noremap = true}
+)
+vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>",
+  {silent = true, noremap = true}
+)
+vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>",
+  {silent = true, noremap = true}
+)
 --
 --
 --
