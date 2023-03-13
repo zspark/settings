@@ -54,11 +54,6 @@ opt.linebreak=true
 --
 --
 --
-cmd "set syntax=enable"
-cmd "set listchars=tab:>-"
-cmd "syn on"
---
---
 --
 --
 local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
@@ -150,9 +145,68 @@ _packer.startup(function(use)
     requires = "nvim-lua/plenary.nvim",
     config = function()
         require("todo-comments").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
+            signs = true, -- show icons in the signs column
+            sign_priority = 8, -- sign priority
+            -- keywords recognized as todo comments
+            keywords = {
+                FIX = {
+                icon = " ", -- icon used for the sign, and in search results
+                color = "error", -- can be a hex color, or a named color (see below)
+                alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+                -- signs = false, -- configure signs for some keywords individually
+                },
+                TODO = { icon = " ", color = "info" },
+                HACK = { icon = " ", color = "warning" },
+                WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+                PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+                NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+                TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+            },
+            gui_style = {
+                fg = "NONE", -- The gui style to use for the fg highlight group.
+                bg = "BOLD", -- The gui style to use for the bg highlight group.
+            },
+            merge_keywords = true, -- when true, custom keywords will be merged with the defaults
+            -- highlighting of the line containing the todo comment
+            -- * before: highlights before the keyword (typically comment characters)
+            -- * keyword: highlights of the keyword
+            -- * after: highlights after the keyword (todo text)
+            highlight = {
+                multiline = true, -- enable multine todo comments
+                multiline_pattern = "^.", -- lua pattern to match the next multiline from the start of the matched keyword
+                multiline_context = 10, -- extra lines that will be re-evaluated when changing a line
+                before = "", -- "fg" or "bg" or empty
+                keyword = "wide", -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty. (wide and wide_bg is the same as bg, but will also highlight surrounding characters, wide_fg acts accordingly but with fg)
+                after = "fg", -- "fg" or "bg" or empty
+                pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlightng (vim regex)
+                comments_only = true, -- uses treesitter to match keywords in comments only
+                max_line_len = 400, -- ignore lines longer than this
+                exclude = {}, -- list of file types to exclude highlighting
+            },
+            -- list of named colors where we try to extract the guifg from the
+            -- list of highlight groups or use the hex color if hl not found as a fallback
+            colors = {
+                error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+                warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+                info = { "DiagnosticInfo", "#2563EB" },
+                hint = { "DiagnosticHint", "#10B981" },
+                default = { "Identifier", "#7C3AED" },
+                test = { "Identifier", "#FF00FF" }
+            },
+            search = {
+                command = "rg",
+                args = {
+                "--color=never",
+                "--no-heading",
+                "--with-filename",
+                "--line-number",
+                "--column",
+                },
+                -- regex that will be used to match keywords.
+                -- don't replace the (KEYWORDS) placeholder
+                pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+                -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
+            },
         }
     end
   }
@@ -211,27 +265,38 @@ require("mason").setup({
 --
 --
 --
-local lsp_opts = { noremap=true, silent=true }
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
 local lspconfig_on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', lsp_opts)
-  --vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', lsp_opts)
-  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', lsp_opts)
-  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', lsp_opts)
-  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', lsp_opts)
-  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', lsp_opts)
-  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', lsp_opts)
-  --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-A-l>', '<cmd>lua vim.lsp.buf.formatting()<CR>', lsp_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<A-F>', '<cmd>lua vim.lsp.buf.formatting()<CR>', lsp_opts)
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  --vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  --vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  --vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  --vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  --[[
+  vim.keymap.set('n', '<space>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+  ]]--
+  --vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+  --vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+  --vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<C-A-l>', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
 local _lsp = require("lspconfig");
 _lsp["tsserver"].setup { on_attach = lspconfig_on_attach, }
@@ -351,8 +416,12 @@ local new_maker = function(filepath, bufnr, opts)
     end
   end)
 end
+--local actions = require("telescope.actions")
+--local trouble = require("trouble.providers.telescope")
 require('telescope').setup{
   defaults = {
+    mappings = {
+    },
     buffer_previewer_maker = new_maker,
     -- Default configuration for telescope goes here:
     -- config_key = value,
@@ -361,8 +430,12 @@ require('telescope').setup{
         -- map actions.which_key to <C-h> (default: <C-/>)
         -- actions.which_key shows the mappings for your picker,
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
-        ["<C-h>"] = "which_key"
-      }
+        -- ["<C-h>"] = "which_key"
+        -- ["<c-t>"] = trouble.open_with_trouble 
+      },
+      n = { 
+        -- ["<c-t>"] = trouble.open_with_trouble 
+      },
     }
   },
   pickers = {
@@ -418,6 +491,7 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
 -- /////////// end of config
 -- /////////////////////////////////////////////////////////////////////////////////
 --
@@ -465,56 +539,32 @@ vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>",
 --
 --
 --
---
---
---
---
---
---
---
---
-local Plug = vim.fn['plug#']
-vim.call('plug#begin', '~/.config/nvim/.plug')
---Plug 'francoiscabrol/ranger.vim'
---Plug 'rbgrouleff/bclose.vim'
---Plug 'sainnhe/sonokai'
---Plug 'altercation/vim-colors-solarized'
---Plug 'nlknguyen/papercolor-theme'
---Plug 'itchyny/lightline.vim'
---Plug ('sonph/onehalf', { rtp= 'vim' })
---Plug ('iamcco/markdown-preview.nvim', { do= 'cd app && yarn install'  })
-Plug 'fioncat/vim-bufclean'
-vim.call('plug#end')
-
-
-
-
-
 --cmd [[colorscheme nightfox]]
 cmd [[colorscheme nightfox]]
-cmd [[nnoremap <leader>bc :BufClean<CR>]]
+--
 ---cmd [[nnoremap <leader>t :Telescope<CR>]]
---cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
-cmd [[nnoremap <leader>e :NvimTreeFocus<CR>]]
---cmd [[map <leader>te :tabedit <C-r>=expand("%:p:h")<CR>/]]
 ---cmd [[nnoremap <leader>m :Mason<CR>]]
 ---cmd [[nnoremap <leader>g :Gitsigns<CR>]]
+cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
+--cmd [[nnoremap <leader>e :NvimTreeFocus<CR>]]
+--cmd [[map <leader>te :tabedit <C-r>=expand("%:p:h")<CR>/]]
 cmd [[nnoremap <A-q> :q<CR>]]
-cmd [[map <F2> :checktime<CR>]]
 ---cmd [[nmap <leader>w :w!<CR>]]
 
 cmd [[map <C-j> <C-W>j]]
 cmd [[map <C-k> <C-W>k]]
 cmd [[map <C-h> <C-W>h]]
 cmd [[map <C-l> <C-W>l]]
--- Move a line of text using ALT+[jk] or Command+[jk] on mac
 cmd [[nmap <A-j> mz:m+<CR>`z]]
 cmd [[nmap <A-k> mz:m-2<CR>`z]]
 cmd [[vmap <A-j> :m'>+<CR>`<my`>mzgv`yo`z]]
 cmd [[vmap <A-k> :m'<-2<CR>`>my`<mzgv`yo`z]]
 
-cmd [[nnoremap <leader>n :tabnew<CR>]]
-cmd [[nnoremap <leader>c :tabclose<CR>]]
+cmd [[map <F1> ggVGza]]
+cmd [[map <F1> ggVGzo]]
+
+--cmd [[nnoremap <leader>n :tabnew<CR>]]
+--cmd [[nnoremap <leader>c :tabclose<CR>]]
 
 cmd [[noremap <silent><leader>1 :tabn 1<CR>]]
 cmd [[noremap <silent><leader>2 :tabn 2<CR>]]
@@ -640,48 +690,8 @@ set tabline=%!MyTabline()
 --
 --
 --
---[[
-g.lightline = {
-colorscheme= 'dayfox',
-active= {
-left= { { 'mode', 'paste' }, { 'gitbranch', 'readonly', 'filename', 'modified' } },
-right= { {'gitstatus'},{ 'lineinfo' },{ 'percent' },{ 'fileformat', 'fileencoding', 'filetype' } }
-},
-component= { gitbranch= 'GitBranch', gitstatus='b:gitsigns_status' },
-mode_map= { n= 'N', i= 'I', R= 'R', v= 'V', V= 'VL', c= 'C', s= 'S', S= 'SL', t= 'T', },
-}
-]]
---opt.foldenable=true
---opt.foldmethod = "expr"
---opt.foldexpr = "nvim_treesitter#foldexpr()"
---cmd [[autocmd BufReadPost,FileReadPost * normal zR]]
-
--- function to create a list of commands and convert them to autocommands
--------- This function is taken from https://github.com/norcalli/nvim_utils
---[[
-local M = {}
-function M.nvim_create_augroups(definitions)
-    for group_name, definition in pairs(definitions) do
-        api.nvim_command('augroup '..group_name)
-        api.nvim_command('autocmd!')
-        for _, def in ipairs(definition) do
-            local command = table.concat(vim.tbl_flatten{'autocmd', def}, ' ')
-            api.nvim_command(command)
-        end
-        api.nvim_command('augroup END')
-    end
-end
-local autoCommands = {
-    -- other autocommands
-    open_folds = {
-        {"BufReadPost,FileReadPost", "*", "normal zR"}
-    }
-}
-M.nvim_create_augroups(autoCommands)
-]]
-
-
-
+--
+--
 cmd [[
 let s:is_win = has('win32') || has('win64')
 if s:is_win
@@ -691,3 +701,11 @@ if s:is_win
 endif
 ]]
 
+
+cmd "set syntax=enable"
+cmd "set listchars=tab:>-"
+cmd "syn on"
+--
+cmd "set foldmethod=indent"
+cmd "set nofoldenable"
+cmd "set foldlevel=99"
