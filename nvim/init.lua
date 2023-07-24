@@ -93,7 +93,7 @@ _packer.startup(function(use)
     config = function()
       require('lualine').setup({
         options = {
-          theme = "duskfox",
+          theme = "onedark",
         }
       })
     end,
@@ -211,6 +211,8 @@ _packer.startup(function(use)
     end
   }
 
+  use 'xiyaowong/transparent.nvim'
+
 
 
 
@@ -222,6 +224,16 @@ _packer.startup(function(use)
 end)
 --
 --
+require("transparent").setup({
+  groups = { -- table: default groups
+    'Normal', 'NormalNC', 'Comment', 'Constant', 'Special', 'Identifier',
+    'Statement', 'PreProc', 'Type', 'Underlined', 'Todo', 'String', 'Function',
+    'Conditional', 'Repeat', 'Operator', 'Structure', 'LineNr', 'NonText',
+    'SignColumn', 'CursorLineNr', 'EndOfBuffer',
+  },
+  extra_groups = {}, -- table: additional groups that should be cleared
+  exclude_groups = {}, -- table: groups you don't want to clear
+})
 --
 --
 --
@@ -474,22 +486,29 @@ require'nvim-treesitter.configs'.setup {
   ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
   -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
 
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
+    highlight = {
+        enable = true,
 
-    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-    -- the name of the parser)
-    -- list of language that will be disabled
-    -- disable = { "c", "rust" },
+        -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+        -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+        -- the name of the parser)
+        -- list of language that will be disabled
+        -- disable = { "c", "rust" },
+        -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+        disable = function(lang, buf)
+            local max_filesize = 100 * 1024 -- 100 KB
+            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+            if ok and stats and stats.size > max_filesize then
+                return true
+            end
+        end,
 
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+        -- Using this option may slow down your editor, and you may see some duplicate highlights.
+        -- Instead of true it can also be a list of languages
+        additional_vim_regex_highlighting = false,
+    },
 }
 
 -- /////////// end of config
@@ -706,6 +725,8 @@ cmd "set syntax=enable"
 cmd "set listchars=tab:>-"
 cmd "syn on"
 --
-cmd "set foldmethod=indent"
 cmd "set nofoldenable"
 cmd "set foldlevel=99"
+--cmd "set foldmethod=indent"
+cmd "set foldmethod=expr"
+cmd "set foldexpr=nvim_treesitter#foldexpr()"
