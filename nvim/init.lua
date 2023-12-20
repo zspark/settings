@@ -87,7 +87,6 @@ _packer.startup(function(use)
   use { "nvim-telescope/telescope.nvim", requires = { {"nvim-lua/plenary.nvim"} }, }
   use "EdenEast/nightfox.nvim"
   use "williamboman/mason.nvim"
-  --use { 'zSpark/barbar.nvim', requires = {'nvim-tree/nvim-web-devicons'} }
   use { 'nvim-lualine/lualine.nvim',
     requires = { 'nvim-tree/nvim-web-devicons', opt = true },
     config = function()
@@ -115,105 +114,18 @@ _packer.startup(function(use)
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
   --[[
-  use { "folke/which-key.nvim",
+  use { "folke/trouble.nvim", requires = "nvim-tree/nvim-web-devicons",
     config = function()
-        vim.o.timeout = true
-        vim.o.timeoutlen = 300
-        require("which-key").setup {
+      require("trouble").setup {
         -- your configuration comes here
         -- or leave it empty to use the default settings
         -- refer to the configuration section below
-        }
+      }
     end
   }
   --]]
-  -- Lua
-    use {
-    "folke/trouble.nvim",
-    requires = "nvim-tree/nvim-web-devicons",
-    config = function()
-        require("trouble").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-        }
-    end
-    }
-  use "lukas-reineke/indent-blankline.nvim"
-  -- Lua
-  use { "folke/todo-comments.nvim",
-    requires = "nvim-lua/plenary.nvim",
-    config = function()
-        require("todo-comments").setup {
-            signs = true, -- show icons in the signs column
-            sign_priority = 8, -- sign priority
-            -- keywords recognized as todo comments
-            keywords = {
-                FIX = {
-                icon = " ", -- icon used for the sign, and in search results
-                color = "error", -- can be a hex color, or a named color (see below)
-                alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-                -- signs = false, -- configure signs for some keywords individually
-                },
-                TODO = { icon = " ", color = "info" },
-                HACK = { icon = " ", color = "warning" },
-                WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-                PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-                NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-                TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
-            },
-            gui_style = {
-                fg = "NONE", -- The gui style to use for the fg highlight group.
-                bg = "BOLD", -- The gui style to use for the bg highlight group.
-            },
-            merge_keywords = true, -- when true, custom keywords will be merged with the defaults
-            -- highlighting of the line containing the todo comment
-            -- * before: highlights before the keyword (typically comment characters)
-            -- * keyword: highlights of the keyword
-            -- * after: highlights after the keyword (todo text)
-            highlight = {
-                multiline = true, -- enable multine todo comments
-                multiline_pattern = "^.", -- lua pattern to match the next multiline from the start of the matched keyword
-                multiline_context = 10, -- extra lines that will be re-evaluated when changing a line
-                before = "", -- "fg" or "bg" or empty
-                keyword = "wide", -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty. (wide and wide_bg is the same as bg, but will also highlight surrounding characters, wide_fg acts accordingly but with fg)
-                after = "fg", -- "fg" or "bg" or empty
-                pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlightng (vim regex)
-                comments_only = true, -- uses treesitter to match keywords in comments only
-                max_line_len = 400, -- ignore lines longer than this
-                exclude = {}, -- list of file types to exclude highlighting
-            },
-            -- list of named colors where we try to extract the guifg from the
-            -- list of highlight groups or use the hex color if hl not found as a fallback
-            colors = {
-                error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-                warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
-                info = { "DiagnosticInfo", "#2563EB" },
-                hint = { "DiagnosticHint", "#10B981" },
-                default = { "Identifier", "#7C3AED" },
-                test = { "Identifier", "#FF00FF" }
-            },
-            search = {
-                command = "rg",
-                args = {
-                "--color=never",
-                "--no-heading",
-                "--with-filename",
-                "--line-number",
-                "--column",
-                },
-                -- regex that will be used to match keywords.
-                -- don't replace the (KEYWORDS) placeholder
-                pattern = [[\b(KEYWORDS):]], -- ripgrep regex
-                -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
-            },
-        }
-    end
-  }
 
   use 'xiyaowong/transparent.nvim'
-
-
 
 
   -- automatically set up your configuration after cloning packer.nvim
@@ -224,6 +136,13 @@ _packer.startup(function(use)
 end)
 --
 --
+--
+--
+--
+-- /////////////////////////////////////////////////////////////////////////////////
+-- /////////// configs
+--require("barbar").setup()
+
 require("transparent").setup({
   groups = { -- table: default groups
     'Normal', 'NormalNC', 'Comment', 'Constant', 'Special', 'Identifier',
@@ -234,12 +153,6 @@ require("transparent").setup({
   extra_groups = {}, -- table: additional groups that should be cleared
   exclude_groups = {}, -- table: groups you don't want to clear
 })
---
---
---
--- /////////////////////////////////////////////////////////////////////////////////
--- /////////// configs
---require("barbar").setup()
 
 local cmp=require("cmp");
 cmp.setup({
@@ -249,19 +162,19 @@ cmp.setup({
       --['<C-Space>'] = cmp.mapping.complete(),
       --['<C-e>'] = cmp.mapping.abort(),
       --['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      --{ name = 'vsnip' }, -- For vsnip users.
-      -- { name = 'luasnip' }, -- For luasnip users.
-      -- { name = 'ultisnips' }, -- For ultisnips users.
-      -- { name = 'snippy' }, -- For snippy users.
-    }, {
-      { name = 'buffer' },
-      { name = 'path' },
-      -- { name = 'cmdline' },
-    })
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    --{ name = 'vsnip' }, -- For vsnip users.
+    -- { name = 'luasnip' }, -- For luasnip users.
+    -- { name = 'ultisnips' }, -- For ultisnips users.
+    -- { name = 'snippy' }, -- For snippy users.
+  }, {
+    { name = 'buffer' },
+    { name = 'path' },
+    -- { name = 'cmdline' },
   })
+})
 
 require("mason").setup({
     ui = {
@@ -560,16 +473,6 @@ vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>",
 --
 --cmd [[colorscheme nightfox]]
 cmd [[colorscheme nightfox]]
---
----cmd [[nnoremap <leader>t :Telescope<CR>]]
----cmd [[nnoremap <leader>m :Mason<CR>]]
----cmd [[nnoremap <leader>g :Gitsigns<CR>]]
-cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
---cmd [[nnoremap <leader>e :NvimTreeFocus<CR>]]
---cmd [[map <leader>te :tabedit <C-r>=expand("%:p:h")<CR>/]]
-cmd [[nnoremap <A-q> :q<CR>]]
----cmd [[nmap <leader>w :w!<CR>]]
-
 cmd [[map <C-j> <C-W>j]]
 cmd [[map <C-k> <C-W>k]]
 cmd [[map <C-h> <C-W>h]]
@@ -578,13 +481,6 @@ cmd [[nmap <A-j> mz:m+<CR>`z]]
 cmd [[nmap <A-k> mz:m-2<CR>`z]]
 cmd [[vmap <A-j> :m'>+<CR>`<my`>mzgv`yo`z]]
 cmd [[vmap <A-k> :m'<-2<CR>`>my`<mzgv`yo`z]]
-
-cmd [[map <F1> ggVGza]]
-cmd [[map <F1> ggVGzo]]
-
---cmd [[nnoremap <leader>n :tabnew<CR>]]
---cmd [[nnoremap <leader>c :tabclose<CR>]]
-
 cmd [[noremap <silent><leader>1 :tabn 1<CR>]]
 cmd [[noremap <silent><leader>2 :tabn 2<CR>]]
 cmd [[noremap <silent><leader>3 :tabn 3<CR>]]
@@ -595,9 +491,10 @@ cmd [[noremap <silent><leader>7 :tabn 7<CR>]]
 cmd [[noremap <silent><leader>8 :tabn 8<CR>]]
 cmd [[noremap <silent><leader>9 :tabn 9<CR>]]
 cmd [[noremap <silent><leader>0 :tabn 10<CR>]]
---cmd [[nnoremap <CR> o<esc>]]
---cmd [[nnoremap ? :!]]
 cmd [[inoremap jk <esc>]]
+cmd [[nnoremap <leader>e :NvimTreeToggle<CR>]]
+cmd [[nnoremap <A-q> :q<CR>]]
+cmd [[nnoremap <C-s> :w<CR>]]
 
 
 --
@@ -730,3 +627,13 @@ cmd "set foldlevel=99"
 --cmd "set foldmethod=indent"
 cmd "set foldmethod=expr"
 cmd "set foldexpr=nvim_treesitter#foldexpr()"
+
+    --autocmd WinEnter * set relativenumber
+    --autocmd WinLeave * set norelativenumber
+cmd [[
+augroup BgHighlight
+    autocmd!
+    autocmd WinEnter * set cul
+    autocmd WinLeave * set nocul
+augroup END
+]]
