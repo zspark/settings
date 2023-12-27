@@ -258,6 +258,7 @@ local _plugins = {
 
 
 ----------------------------------------------------------------------------------
+    --[[
     {
         "xiyaowong/transparent.nvim",
         lazy = true,
@@ -273,6 +274,7 @@ local _plugins = {
             exclude_groups = {}, -- table: groups you don't want to clear
         },
     },
+    --]]
 
 
 
@@ -335,14 +337,17 @@ local _plugins = {
             },
             indent = { enable = true },
             ensure_installed = {
-                "html", "javascript", "jsdoc", "json", "json5", "jsonc", "typescript",
+                "javascript", "typescript", 
+                "json",-- "json5", "jsonc",
+                "jsdoc", "html", 
                 "markdown", -- "markdown_inline",
-                "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore",
-                "bash", "diff",
+                -- "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore",
+                -- "bash", "diff",
                 "toml", "yaml",
                 "query", "regex",
                 "lua", -- "luadoc", "luap",
-                "vim", "vimdoc", "glsl",
+                "glsl",
+                -- "vim", "vimdoc",
                 --"python", "tsx", "c",
             },
             sync_install = false,
@@ -660,6 +665,7 @@ local _plugins = {
 
 
 ---------------------------------------------------------------------------------
+    --[[
     {
         "folke/flash.nvim",
         event = "VeryLazy",
@@ -672,6 +678,7 @@ local _plugins = {
             --{ "<c-j>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
         },
     },
+    --]]
 
 
 
@@ -791,6 +798,9 @@ local _plugins = {
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
+        keys = {
+            { '<leader>l', "<cmd>LazyGit<CR>" },
+        },
     },
     --]]
 
@@ -818,14 +828,56 @@ local _plugins = {
         opts = {
             provider_selector = function(bufnr, filetype, buftype)
                 return {'treesitter', 'indent'}
-            end
+            end,
+            open_fold_hl_timeout = 150,
+            close_fold_kinds = {'imports', 'comment'},
+            preview = {
+                win_config = {
+                    border = {'', '─', '', '', '', '─', '', ''},
+                    winhighlight = 'Normal:Folded',
+                    winblend = 0
+                },
+                mappings = {
+                    scrollU = '<C-u>',
+                    scrollD = '<C-d>',
+                    jumpTop = '[',
+                    jumpBot = ']'
+                }
+            },
+            fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
+                local newVirtText = {}
+                local suffix = (' 󰁂 %d '):format(endLnum - lnum)
+                local sufWidth = vim.fn.strdisplaywidth(suffix)
+                local targetWidth = width - sufWidth
+                local curWidth = 0
+                for _, chunk in ipairs(virtText) do
+                    local chunkText = chunk[1]
+                    local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+                    if targetWidth > curWidth + chunkWidth then
+                        table.insert(newVirtText, chunk)
+                    else
+                        chunkText = truncate(chunkText, targetWidth - curWidth)
+                        local hlGroup = chunk[2]
+                        table.insert(newVirtText, {chunkText, hlGroup})
+                        chunkWidth = vim.fn.strdisplaywidth(chunkText)
+                        -- str width returned from truncate() may less than 2nd argument, need padding
+                        if curWidth + chunkWidth < targetWidth then
+                            suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+                        end
+                        break
+                    end
+                    curWidth = curWidth + chunkWidth
+                end
+                table.insert(newVirtText, {suffix, 'MoreMsg'})
+                return newVirtText
+            end,
         },
         config = function(_, opts)
             require("ufo").setup(opts)
         end,
         keys = {
-            { 'zR', "<cmd>lua require('ufo').openAllFolds()<CR>" },
-            { 'zM', "<cmd>lua require('ufo').closeAllFolds()<CR>" },
+            { 'zr', "<cmd>lua require('ufo').openAllFolds()<CR>" },
+            { 'zm', "<cmd>lua require('ufo').closeAllFolds()<CR>" },
         },
 
     }
