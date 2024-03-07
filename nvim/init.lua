@@ -53,7 +53,7 @@ opt.hlsearch=true
 opt.incsearch=true
 opt.ttimeoutlen=50
 opt.updatetime=100
-opt.wrap=true
+opt.wrap=false -- soft wrap;
 opt.linebreak=true
 --
 --
@@ -348,7 +348,8 @@ local _plugins = {
                 "lua", -- "luadoc", "luap",
                 "glsl",
                 -- "vim", "vimdoc",
-                --"python", "tsx", "c",
+                --"python", "tsx", 
+                "c",
             },
             sync_install = false,
             auto_install = true,
@@ -449,6 +450,7 @@ local _plugins = {
                         }
                     },
                     buffer_previewer_maker = new_maker,
+                    layout_strategy = "vertical"
                 },
             }
             end,
@@ -458,6 +460,7 @@ local _plugins = {
             { '<A-/>', "<cmd>lua require('telescope.builtin').live_grep()<CR>" },
             { '<A-d>', "<cmd>lua require('telescope.builtin').diagnostics()<CR>" },
             { '<A-o>', "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>" },
+            --{ '<A-n>', "<cmd>lua require('telescope.builtin').search_history()<CR>" },
         }
     },
 
@@ -483,8 +486,8 @@ local _plugins = {
                     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
                     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
                     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-                    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
                     vim.keymap.set('n', '<C-A-l>', function() vim.lsp.buf.format { async = true } end, opts)
+                    --vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
                     --vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
                     --vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
                     --vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
@@ -498,12 +501,42 @@ local _plugins = {
         config = function(_, opts)
             --local capabilities = require("cmp_nvim_lsp").default_capabilities()
             local lspconfig = require("lspconfig")
-            local servers = { "tsserver", "html", "jsonls", "cssls"--[[, "clangd"--]]}
+            local servers = { "tsserver", "html", "jsonls", "cssls"}
             for _, lsp in ipairs(servers) do
                 lspconfig[lsp].setup {
                     --capabilities = capabilities,
                 }
             end
+
+	    local root_pattern = require("lspconfig.util").root_pattern(
+		".clangd",
+		".clang-tidy",
+		".clang-format",
+		"compile_commands.json",
+		"Makefile",
+		"configure.ac",
+		"configure.in",
+		"config.h.in",
+		"meson.build",
+		"meson_options.txt",
+		"build.ninja",
+		".git"
+	    )
+            lspconfig.clangd.setup {
+                cmd = {
+                    "clangd",
+                    "--background-index",
+                    "--clang-tidy",
+                    "--header-insertion=iwyu",
+                    "--completion-style=detailed",
+                    "--function-arg-placeholders",
+                    "--fallback-style=llvm",
+                },
+                filetypes = { "c", "cpp", "cxx","cc", "objc", "objcpp", "cuda", "proto" },
+                root_dir = function(fname)
+                    return root_pattern(fname) 
+                end,
+            }
         end,
     },
 
