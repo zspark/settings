@@ -1,8 +1,8 @@
 # This is Git's per-user configuration file.
 [user]
 # Please adapt and uncomment the following lines:
-	name = 赵伟(10027299)
-	email = zhaow-m@glodon.com
+	name = JerryChaos
+	email = jerry-chaos@outlook.com
 [alias]
 	st=status -sb
 	ci=commit
@@ -29,11 +29,8 @@
 	sb=show-branch
 	sw=switch
 	rb=rebase
-[diff]
-	tool = smerge
-[difftool]
-	prompt=false
-[merge]
-	tool=smerge
-[mergetool]
-	prompt=false
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
